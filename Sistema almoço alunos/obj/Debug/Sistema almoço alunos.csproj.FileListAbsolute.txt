@@ -1,0 +1,26 @@
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.AssemblyReference.cache
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.SuggestedBindingRedirects.cache
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.Properties.Resources.resources
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.GenerateResource.cache
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.CoreCompileInputs.cache
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\Sistema almoço alunos.exe.config
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\Sistema almoço alunos.exe
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\Sistema almoço alunos.pdb
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\nunit.framework.dll
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\nunit.framework.xml
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.CopyComplete
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.exe
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.pdb
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\EntityFramework.dll
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\System.Data.SQLite.dll
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\EntityFramework.xml
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\System.Data.SQLite.xml
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.CadAluno.resources
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.NovoAluno.resources
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.DetalheAluno.resources
