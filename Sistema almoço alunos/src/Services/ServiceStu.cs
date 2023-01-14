@@ -10,15 +10,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using Sistema_almoço_alunos.src.Utils.dto;
+using System.Net.NetworkInformation;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Sistema_almoço_alunos.src.Services
 {
     internal class ServiceStu
     {
         Conexao con = new Conexao();
-
-
-
         public Aluno buscarPorId(int id)
         {
             Aluno aluno = new Aluno();
@@ -35,7 +34,7 @@ namespace Sistema_almoço_alunos.src.Services
 
             data.Fill(dt);
 
-            if(dt.Rows.Count == 1)
+            if (dt.Rows.Count == 1)
             {
                 int novoid = Convert.ToInt32(dt.Rows[0].ItemArray[0]);
                 string nome = dt.Rows[0].ItemArray[1].ToString();
@@ -56,7 +55,6 @@ namespace Sistema_almoço_alunos.src.Services
         // salvar aluno
         public bool SalvarAluno(Aluno aluno)
         {
-           
             // Instanciando a variavel onde o comando é guardado
             string sql;
 
@@ -65,18 +63,18 @@ namespace Sistema_almoço_alunos.src.Services
             {
                 con.conectar();
 
-                Aluno usr = buscarPorId(aluno.getid());
-
-                sql = "Update Alunos WHERE Id = @Id SET Nome = @n, Responsavel = @r, Telefone = @t";
+                sql = "Update Alunos SET Nome = @n, Responsavel = @r, Telefone = @t, Turma = @t2 WHERE Id=@i";
 
                 SQLiteCommand parametros = new SQLiteCommand(con.conect);
 
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
 
+                parametros.Parameters.AddWithValue("@i", aluno.getid());
                 parametros.Parameters.AddWithValue("@n", aluno.getnome());
                 parametros.Parameters.AddWithValue("@r", aluno.getresponsavel());
                 parametros.Parameters.AddWithValue("@t", aluno.gettelefone());
+                parametros.Parameters.AddWithValue("@t2", aluno.getTurma());
 
                 //Efetiva o comando o comando
                 parametros.ExecuteNonQuery();
@@ -91,7 +89,7 @@ namespace Sistema_almoço_alunos.src.Services
                 con.conectar();
 
                 // Estabelecendo o comando
-                sql = "INSERT INTO Alunos (Nome, Responsavel, Telefone) values(@n, @r, @t)";
+                sql = "INSERT INTO Alunos (Nome, Responsavel, Telefone, Turma) values(@n, @r, @t, @t2)";
 
                 //Estabelecendo a conexão do comando com o banco de dados
                 SQLiteCommand parametros = new SQLiteCommand(con.conect);
@@ -102,6 +100,7 @@ namespace Sistema_almoço_alunos.src.Services
                 parametros.Parameters.AddWithValue("@n", aluno.getnome());
                 parametros.Parameters.AddWithValue("@r", aluno.getresponsavel());
                 parametros.Parameters.AddWithValue("@t", aluno.gettelefone());
+                parametros.Parameters.AddWithValue("@t2", aluno.getTurma());
 
                 //Efetiva o comando o comando
                 parametros.ExecuteNonQuery();
@@ -122,16 +121,6 @@ namespace Sistema_almoço_alunos.src.Services
                 return false;
             }
 
-            
-
-        }
-
-        public Aluno SelectAluno(Aluno aluno)
-        {
-
-
-
-            return aluno;
         }
 
         public DataTable listAlunos()
@@ -141,16 +130,46 @@ namespace Sistema_almoço_alunos.src.Services
                 Conexao con = new Conexao();
 
                 con.conectar();
-
                 string sql = "SELECT * FROM Alunos";
+                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
+                DataTable dt = new DataTable();
+
+                    data.Fill(dt);
+
+                con.desconectar();
+                return dt;
+                
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+
+        }
+
+        public DataTable listAlunosEsp(string text, string filtro)
+        {
+            try
+            {
+                Conexao con = new Conexao();
+
+                con.conectar();
+
+                string sql = "SELECT * FROM Alunos WHERE "+filtro+" LIKE '"+text+"%'";
 
                 SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
 
                 DataTable dt = new DataTable();
 
                 data.Fill(dt);
-                return dt;   
+
+                con.desconectar();
+                return dt;
+
             }
+
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -158,14 +177,53 @@ namespace Sistema_almoço_alunos.src.Services
             }
         }
 
-        public void UpAluno(Aluno aluno)
-        {
-            
-        }
-
         public void DelAluno(Aluno aluno)
         {
+            try
+            {
+                con.conectar();
 
+                // Estabelecendo o comando
+                string sql = "DELETE FROM Alunos WHERE Id=@i";
+
+                //Estabelecendo a conexão do comando com o banco de dados
+                SQLiteCommand parametros = new SQLiteCommand(con.conect);
+
+                // Estabelecendo o texto do comando e o que cada @ significa a seguir
+                parametros.CommandText = sql;
+
+                parametros.Parameters.AddWithValue("@i", aluno.getid());
+
+                //Efetiva o comando o comando
+                parametros.ExecuteNonQuery();
+
+                //Descondectando do banco de dados
+                con.desconectar();
+
+
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                
+            }
+        }
+
+        public List<string> listFiltro()
+        {
+            List<string> filtro = new List<string>();
+
+            string dado = "Nome";
+            filtro.Add(dado);
+            dado = "Turma";
+            filtro.Add(dado);
+            dado = "Telefone";
+            filtro.Add(dado);
+            dado = "Responsavel";
+            filtro.Add(dado);
+
+            return filtro;
         }
     }
 }

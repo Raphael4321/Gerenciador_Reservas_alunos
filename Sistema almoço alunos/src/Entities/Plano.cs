@@ -6,13 +6,42 @@ using System.Threading.Tasks;
 
 namespace Sistema_almoço_alunos.src.Entities
 {
-    internal class Plano
+    public class Plano
     {
-        public string id;
-        public string nome;
-        public double valor;
-        public string hrInicio;
-        public string hrFim;
+        private int Id;
+        private string Nome;
+        private double Valor;
+
+        public int getid()
+        {
+            return Id;
+        }
+
+        public void setid(int id)
+        {
+            this.Id = id;
+        }
+
+        public string getnome()
+        {
+            return Nome;
+        }
+
+        public void setnome(string nome)
+        {
+            this.Nome = nome;
+        }
+
+        public double getvalor()
+        {
+            return Valor;
+        }
+
+        public void setvalor(double valor)
+        {
+            this.Valor = valor;
+        }
+
 
     }
 }

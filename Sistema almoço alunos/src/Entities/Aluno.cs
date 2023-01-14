@@ -16,6 +16,7 @@ namespace Sistema_almoço_alunos.src.Entities
         private string Nome;
         private string Responsavel;
         private string Telefone;
+        private string Turma;
 
         public int getid()
         {
@@ -47,6 +48,16 @@ namespace Sistema_almoço_alunos.src.Entities
             this.Responsavel = responsavel;
         }
 
+        public void setTurma(string turma)
+        {
+            this.Turma = turma;
+        }
+
+        public string getTurma()
+        {
+            return Turma;
+        }
+
         public string gettelefone()
         {
             return Telefone;
@@ -57,94 +68,11 @@ namespace Sistema_almoço_alunos.src.Entities
             this.Telefone = telefone;
         }
 
+
+
        
-        public string AlunoSerializar(Aluno aluno)
-        {
-            return JsonConvert.SerializeObject(aluno);
-        }
 
-        public static Aluno AlunoDesserializar(string path)
-        {
-            string str = OpenFileAluno(path);
-            if (str.Substring(0, 5) != "Falha")
-            {
-                return JsonConvert.DeserializeObject<Aluno>(str);
-            }
-            else
-            {
-               Aluno aluno = new Aluno();
-                aluno.Nome = str;
-                return aluno;
-            }
-        }
-
-        public static List<Aluno> AlunoDesserializarLista(string path)
-        {
-            string str = OpenFileAluno(path);
-            if (str.Substring(0,5) != "Falha")
-            {
-                return JsonConvert.DeserializeObject<List<Aluno>>(str);
-            }
-            else
-            {
-                List<Aluno> lista = new List<Aluno>();
-                Aluno aluno = new Aluno();
-                aluno.Nome = str;
-                lista.Add(aluno);
-                aluno.Nome = str;
-                return lista;
-            }
-        }
-
-
-
-        public bool SalvarLista(List<Aluno> alunos, string path)
-        {
-            var strjson = JsonConvert.SerializeObject(alunos, Formatting.Indented);
-            return SaveFile(strjson, path);
-        }
-
-        public static Aluno AlunoDeserializar(string Json)
-        {
-            return JsonConvert.DeserializeObject<Aluno>(Json);
-        }
-
-        public bool SaveFile(string strjson, string path)
-        {
-            try
-            {
-                using(StreamWriter sw = new StreamWriter(path))
-                {
-                    sw.WriteLine(strjson);
-                }
-                return true;
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show("erro: "+ ex);
-                return false;
-            }
-        }
-
-        private static string OpenFileAluno(string path)
-        {
-            try
-            {
-                string str = "";
-
-                using (StreamReader sr = new StreamReader(path))
-                {
-                    str = sr.ReadToEnd();
-                }
-
-                return str;
-
-            }
-            catch (Exception ex)
-            {
-                return "falha: " +ex.Message;
-            }
-        }
+      
 
 
     }

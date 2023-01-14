@@ -22,5 +22,6 @@ C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço aluno
 C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\bin\Debug\System.Data.SQLite.xml
 C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.CadAluno.resources
-C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.NovoAluno.resources
-C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.DetalheAluno.resources
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.PlanoCad.resources
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.Aviso.resources
+C:\Users\Raphael\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.Historico.resources
