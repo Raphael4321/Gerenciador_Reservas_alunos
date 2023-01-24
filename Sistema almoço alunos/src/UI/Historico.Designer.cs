@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnAgend = new System.Windows.Forms.Button();
+            this.btnAgendarAlmoço = new System.Windows.Forms.Button();
             this.btnFechar = new System.Windows.Forms.Button();
             this.dtHistorico = new System.Windows.Forms.DataGridView();
             this.btnDeletar = new System.Windows.Forms.Button();
@@ -39,7 +39,6 @@
             this.lblPlano = new System.Windows.Forms.Label();
             this.cmbPlano = new System.Windows.Forms.ComboBox();
             this.lblData = new System.Windows.Forms.Label();
-            this.txtMes = new System.Windows.Forms.TextBox();
             this.lblHorario = new System.Windows.Forms.Label();
             this.txtValorTotal = new System.Windows.Forms.TextBox();
             this.lblValorTotal = new System.Windows.Forms.Label();
@@ -49,20 +48,20 @@
             this.txtFim = new System.Windows.Forms.MaskedTextBox();
             this.txtValor = new System.Windows.Forms.TextBox();
             this.txtPlano = new System.Windows.Forms.TextBox();
-            this.txtAno = new System.Windows.Forms.TextBox();
+            this.txtDataBusca = new System.Windows.Forms.MaskedTextBox();
             this.btnBusca = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtHistorico)).BeginInit();
             this.SuspendLayout();
             // 
-            // btnAgend
+            // btnAgendarAlmoço
             // 
-            this.btnAgend.Location = new System.Drawing.Point(23, 12);
-            this.btnAgend.Name = "btnAgend";
-            this.btnAgend.Size = new System.Drawing.Size(133, 45);
-            this.btnAgend.TabIndex = 20;
-            this.btnAgend.Text = "Agendar Almoço";
-            this.btnAgend.UseVisualStyleBackColor = true;
-            this.btnAgend.Click += new System.EventHandler(this.btnAgen_Click);
+            this.btnAgendarAlmoço.Location = new System.Drawing.Point(23, 12);
+            this.btnAgendarAlmoço.Name = "btnAgendarAlmoço";
+            this.btnAgendarAlmoço.Size = new System.Drawing.Size(133, 45);
+            this.btnAgendarAlmoço.TabIndex = 20;
+            this.btnAgendarAlmoço.Text = "Agendar Almoço";
+            this.btnAgendarAlmoço.UseVisualStyleBackColor = true;
+            this.btnAgendarAlmoço.Click += new System.EventHandler(this.btnAgen_Click);
             // 
             // btnFechar
             // 
@@ -88,7 +87,7 @@
             this.dtHistorico.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dtHistorico.Size = new System.Drawing.Size(194, 231);
             this.dtHistorico.TabIndex = 22;
-            this.dtHistorico.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtHistorico_CellContentClick);
+            this.dtHistorico.SelectionChanged += new System.EventHandler(this.dtHistorico_SelectionChanged);
             // 
             // btnDeletar
             // 
@@ -168,13 +167,6 @@
             this.lblData.TabIndex = 43;
             this.lblData.Text = "Data";
             // 
-            // txtMes
-            // 
-            this.txtMes.Location = new System.Drawing.Point(329, 25);
-            this.txtMes.Name = "txtMes";
-            this.txtMes.Size = new System.Drawing.Size(74, 20);
-            this.txtMes.TabIndex = 50;
-            // 
             // lblHorario
             // 
             this.lblHorario.AutoSize = true;
@@ -203,7 +195,7 @@
             // 
             // btnAdcPl
             // 
-            this.btnAdcPl.Location = new System.Drawing.Point(151, 162);
+            this.btnAdcPl.Location = new System.Drawing.Point(130, 160);
             this.btnAdcPl.Name = "btnAdcPl";
             this.btnAdcPl.Size = new System.Drawing.Size(69, 45);
             this.btnAdcPl.TabIndex = 55;
@@ -257,20 +249,21 @@
             this.txtPlano.Size = new System.Drawing.Size(100, 20);
             this.txtPlano.TabIndex = 60;
             // 
-            // txtAno
+            // txtDataBusca
             // 
-            this.txtAno.Location = new System.Drawing.Point(409, 25);
-            this.txtAno.Name = "txtAno";
-            this.txtAno.Size = new System.Drawing.Size(74, 20);
-            this.txtAno.TabIndex = 61;
+            this.txtDataBusca.Location = new System.Drawing.Point(370, 55);
+            this.txtDataBusca.Mask = "00/00/0000";
+            this.txtDataBusca.Name = "txtDataBusca";
+            this.txtDataBusca.Size = new System.Drawing.Size(100, 20);
+            this.txtDataBusca.TabIndex = 64;
             // 
             // btnBusca
             // 
-            this.btnBusca.Location = new System.Drawing.Point(489, 25);
+            this.btnBusca.Location = new System.Drawing.Point(476, 53);
             this.btnBusca.Name = "btnBusca";
-            this.btnBusca.Size = new System.Drawing.Size(69, 20);
-            this.btnBusca.TabIndex = 62;
-            this.btnBusca.Text = "Adicionar Plano";
+            this.btnBusca.Size = new System.Drawing.Size(69, 23);
+            this.btnBusca.TabIndex = 65;
+            this.btnBusca.Text = "Buscar";
             this.btnBusca.UseVisualStyleBackColor = true;
             this.btnBusca.Click += new System.EventHandler(this.btnBusca_Click);
             // 
@@ -280,7 +273,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(562, 380);
             this.Controls.Add(this.btnBusca);
-            this.Controls.Add(this.txtAno);
+            this.Controls.Add(this.txtDataBusca);
             this.Controls.Add(this.txtPlano);
             this.Controls.Add(this.txtValor);
             this.Controls.Add(this.txtFim);
@@ -289,7 +282,6 @@
             this.Controls.Add(this.btnAdcPl);
             this.Controls.Add(this.txtValorTotal);
             this.Controls.Add(this.lblValorTotal);
-            this.Controls.Add(this.txtMes);
             this.Controls.Add(this.lblData);
             this.Controls.Add(this.cmbPlano);
             this.Controls.Add(this.btnDeletar);
@@ -301,7 +293,7 @@
             this.Controls.Add(this.lblHorario);
             this.Controls.Add(this.dtHistorico);
             this.Controls.Add(this.btnFechar);
-            this.Controls.Add(this.btnAgend);
+            this.Controls.Add(this.btnAgendarAlmoço);
             this.Name = "Historico";
             this.Text = "Detalhes do Aluno";
             ((System.ComponentModel.ISupportInitialize)(this.dtHistorico)).EndInit();
@@ -311,7 +303,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnAgend;
+        private System.Windows.Forms.Button btnAgendarAlmoço;
         private System.Windows.Forms.Button btnFechar;
         private System.Windows.Forms.DataGridView dtHistorico;
         private System.Windows.Forms.Button btnDeletar;
@@ -322,7 +314,6 @@
         private System.Windows.Forms.Label lblPlano;
         private System.Windows.Forms.ComboBox cmbPlano;
         private System.Windows.Forms.Label lblData;
-        private System.Windows.Forms.TextBox txtMes;
         private System.Windows.Forms.Label lblHorario;
         private System.Windows.Forms.TextBox txtValorTotal;
         private System.Windows.Forms.Label lblValorTotal;
@@ -332,7 +323,7 @@
         private System.Windows.Forms.MaskedTextBox txtFim;
         private System.Windows.Forms.TextBox txtValor;
         private System.Windows.Forms.TextBox txtPlano;
-        private System.Windows.Forms.TextBox txtAno;
+        private System.Windows.Forms.MaskedTextBox txtDataBusca;
         private System.Windows.Forms.Button btnBusca;
     }
 }

@@ -54,12 +54,13 @@ namespace Sistema_almoço_alunos.src.UI
                 cmbPlano.DisplayMember = "Nome";
                 cmbPlano.ValueMember = "Id";
 
-                Fill(aluno.getid(), txtMes.Text, txtAno.Text);
+                Fill(aluno.getid(), txtDataBusca.Text);
                 dtHistorico.Columns["Id"].Visible = false;
                 dtHistorico.Columns["Inicio"].Visible = false;
                 dtHistorico.Columns["Fim"].Visible = false;
                 dtHistorico.Columns["IdAluno"].Visible = false;
                 dtHistorico.Columns["IdPlano"].Visible = false;
+                dtHistorico.Columns["Ano"].Visible = false;
 
             }
 
@@ -97,7 +98,7 @@ namespace Sistema_almoço_alunos.src.UI
                 agendamento.plano.setvalor(Convert.ToDouble(txtValor.Text));
 
                 serviceAge.SalvarAgendamento(agendamento);
-                Fill(agendamento.getidAluno(), txtMes.Text, txtAno.Text);
+                Fill(agendamento.getidAluno(),txtDataBusca.Text);
                 setup(0, true, false);
             }
         }
@@ -117,25 +118,16 @@ namespace Sistema_almoço_alunos.src.UI
 
         private void btnAdcPl_Click(object sender, EventArgs e)
         {
-            PlanoCad planoCad= new PlanoCad();
+            PlanoCad planoCad = new PlanoCad();
 
             planoCad.Show();
-
-            if(planoCad.DialogResult == DialogResult.OK)
-            {
-                cmbPlano.DataSource = dt;
-            }
-            else
-            {
-                MessageBox.Show("sem retorno");
-            }
 
         }
 
         private bool textBoxVazias()
         {
             foreach (Control c in this.Controls)
-                if (c is TextBox && c != txtMes && c!=txtAno && c != txtValorTotal && c!=txtPlano)
+                if (c is TextBox && c!=txtDataBusca && c != txtValorTotal && c!=txtPlano)
                 {
                     TextBox textBox = c as TextBox;
                     if (string.IsNullOrWhiteSpace(textBox.Text))
@@ -213,26 +205,8 @@ namespace Sistema_almoço_alunos.src.UI
             if (confirm.ToString().ToUpper() == "YES")
             {
                 serviceAge.DelAgendamento(agendamento);
-                Fill(aluno.getid(), txtMes.Text, txtAno.Text);
+                Fill(aluno.getid(), txtDataBusca.Text);
             }
-        }
-
-        private void dtHistorico_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            agendamento.plano = new Plano();
-            agendamento.setid(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Id"].Value));
-            agendamento.setidAluno(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Id"].Value));
-            agendamento.setdata(DateTime.Parse(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Data"].Value.ToString()));
-            agendamento.setInicio(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Inicio"].Value.ToString());
-            agendamento.setFim(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Fim"].Value.ToString());
-            agendamento.plano.setid(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["IdPlano"].Value));
-            agendamento.plano.setvalor(Convert.ToDouble(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Valor"].Value.ToString()));
-
-            txtPlano.Text = cmbPlano.SelectedText;
-            txtData.Text = Convert.ToString(agendamento.getdata());
-            txtInicio.Text = Convert.ToString(agendamento.getInicio());
-            txtFim.Text = Convert.ToString(agendamento.getFim());
-            cmbPlano.SelectedValue = agendamento.plano.getid();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
@@ -245,27 +219,57 @@ namespace Sistema_almoço_alunos.src.UI
 
         }
 
-        public void Fill(int id, string mes, string ano)
+        public void Fill(int id, string data)
         {
+            DataTable consulta = new DataTable();
+
+            
             // preenchendo a tabela com os dados no banco
-            if (mes == "" && ano == "") 
+            if (data == "  /  /") 
             {
-                dtHistorico.DataSource = serviceAge.listAgendamentos(id);
+                consulta = serviceAge.listAgendamentos(id);
 
             }
-            else { dtHistorico.DataSource = serviceAge.listAgendamentoEsp(id, mes, ano);  }
-            
+            else { consulta = serviceAge.listAgendamentoEsp(id, data);  }
+
+
+            dtHistorico.DataSource = consulta;
+
             // determina o tamanho das colunas na tabela
 
-            DateTime data = DateTime.Now;
 
+            double total = serviceAge.SomaTotal(consulta);
+
+            txtValorTotal.Text = Convert.ToString(total);
             // recarregando a tabela para garantir
             dtHistorico.Refresh();
         }
 
+        private void dtHistorico_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dtHistorico.CurrentRow != null)
+            {
+                agendamento.plano = new Plano();
+                agendamento.setid(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Id"].Value));
+                agendamento.setidAluno(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Id"].Value));
+                agendamento.setdata(DateTime.Parse(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Data"].Value.ToString()));
+                agendamento.setInicio(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Inicio"].Value.ToString());
+                agendamento.setFim(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Fim"].Value.ToString());
+                agendamento.plano.setid(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["IdPlano"].Value));
+                agendamento.plano.setvalor(Convert.ToDouble(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Valor"].Value.ToString()));
+
+                txtPlano.Text = cmbPlano.SelectedText;
+                txtData.Text = Convert.ToString(agendamento.getdata());
+                txtInicio.Text = Convert.ToString(agendamento.getInicio());
+                txtFim.Text = Convert.ToString(agendamento.getFim());
+                cmbPlano.SelectedValue = agendamento.plano.getid();
+            }
+           
+        }
+
         private void btnBusca_Click(object sender, EventArgs e)
         {
-            Fill(aluno.getid(), txtMes.Text, txtAno.Text);
+            Fill(aluno.getid(), txtDataBusca.Text);
         }
     }
 }

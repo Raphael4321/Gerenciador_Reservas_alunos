@@ -44,20 +44,38 @@ namespace Sistema_almoço_alunos
                             
         }
 
-
         private void dtAlunos_CellContentClick(object sender, EventArgs e)
         {
-            //Selecionando Aluno e mostrando detalhes
-            aluno.setid (Convert.ToInt32(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Id"].Value));
-            aluno.setnome(Convert.ToString(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Nome"].Value));
-            aluno.setresponsavel(Convert.ToString(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Responsavel"].Value));
-            aluno.settelefone(Convert.ToString(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Telefone"].Value));
-            aluno.setTurma(Convert.ToString(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Turma"].Value));
+            try
+            {
+                if(dtAlunos.CurrentRow != null)
+                {
+                    //Selecionando Aluno e mostrando detalhes
+                    aluno.setid(Convert.ToInt32(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Id"].Value));
+                    aluno.setnome(Convert.ToString(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Nome"].Value));
+                    aluno.setresponsavel(Convert.ToString(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Responsavel"].Value));
+                    aluno.settelefone(Convert.ToString(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Telefone"].Value));
+                    aluno.setTurma(Convert.ToString(dtAlunos.Rows[dtAlunos.CurrentRow.Index].Cells["Turma"].Value));
 
-            txtNome.Text = aluno.getnome();
-            txtResponsavel.Text = aluno.getresponsavel();
-            txtTelefone.Text = aluno.gettelefone();
-            txtTurma.Text = aluno.getTurma();
+                    txtNome.Text = aluno.getnome();
+                    txtResponsavel.Text = aluno.getresponsavel();
+                    txtTelefone.Text = aluno.gettelefone();
+                    txtTurma.Text = aluno.getTurma();
+                }
+                else
+                {
+                    txtNome.Text = "";
+                    txtResponsavel.Text ="";
+                    txtTelefone.Text = "";
+                    txtTurma.Text ="";
+
+                }
+               
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Erro: " + ex.Message);
+            }
         }
 
         private void btnNew_Click(object sender, EventArgs e)

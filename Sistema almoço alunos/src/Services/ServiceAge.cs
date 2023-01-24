@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
 using System.Reflection.Emit;
@@ -24,12 +25,14 @@ namespace Sistema_almoço_alunos.src.Services
             // Instanciando a variavel onde o comando é guardado
             string sql;
 
+            int ano = Convert.ToInt32(age.getdata().Year);
+
             //se for encontrado Um Id no aluno, então ele ja existe e se trata de uma edição
             if (age.getid() > 0)
             {
                 con.conectar();
 
-                sql = "Update Agendamento SET Data = @d, Inicio=@in, Fim=@f, Valor=@v WHERE Id=@id";
+                sql = "Update Agendamento SET Data = @d, Ano = @a, Inicio=@in, Fim=@f, Valor=@v WHERE Id=@id";
 
                 SQLiteCommand parametros = new SQLiteCommand(con.conect);
 
@@ -39,6 +42,7 @@ namespace Sistema_almoço_alunos.src.Services
                 parametros.Parameters.AddWithValue("@id", age.getid());
                 parametros.Parameters.AddWithValue("@i", age.getidAluno());
                 parametros.Parameters.AddWithValue("@d", age.getdata());
+                parametros.Parameters.AddWithValue("@a", ano);
                 parametros.Parameters.AddWithValue("@in", age.getInicio());
                 parametros.Parameters.AddWithValue("@f", age.getFim());
                 parametros.Parameters.AddWithValue("@v", age.plano.getvalor());
@@ -56,7 +60,7 @@ namespace Sistema_almoço_alunos.src.Services
                 con.conectar();
 
                 // Estabelecendo o comando
-                sql = "INSERT INTO Agendamento (IdAluno, IdPlano, Data, Inicio, Fim, Valor) values(@i, @p, @d, @in, @f, @v)";
+                sql = "INSERT INTO Agendamento (IdAluno, IdPlano, Data, Ano, Inicio, Fim, Valor) values(@i, @p, @d, @a, @in, @f, @v)";
 
                 //Estabelecendo a conexão do comando com o banco de dados
                 SQLiteCommand parametros = new SQLiteCommand(con.conect);
@@ -67,6 +71,7 @@ namespace Sistema_almoço_alunos.src.Services
                 parametros.Parameters.AddWithValue("@i", age.getidAluno());
                 parametros.Parameters.AddWithValue("@p", age.plano.getid());
                 parametros.Parameters.AddWithValue("@d", age.getdata());
+                parametros.Parameters.AddWithValue("@a", ano);
                 parametros.Parameters.AddWithValue("@in", age.getInicio());
                 parametros.Parameters.AddWithValue("@f", age.getFim());
                 parametros.Parameters.AddWithValue("@v", age.plano.getvalor());
@@ -119,33 +124,7 @@ namespace Sistema_almoço_alunos.src.Services
 
         }
 
-        public DataTable SomaTotal(string Mes, string Ano)
-        {
-            try
-            {
-                Conexao con = new Conexao();
-
-                con.conectar();
-                string sql = "SELECT SUM(Valor) as soma FROM Agendamentos WHERE MONTH = '"+Mes+"' AND YEAR = '"+Ano+"'";
-                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
-                DataTable dt = new DataTable();
-
-                data.Fill(dt);
-
-                con.desconectar();
-                return dt;
-
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
-            }
-
-        }
-
-        public DataTable listAgendamentoEsp(int id, string mes, string ano)
+        public DataTable listAgendamentoEsp(int id, string BuscaData)
         {
             try
             {
@@ -155,19 +134,10 @@ namespace Sistema_almoço_alunos.src.Services
 
                 string sql;
 
-                if(mes == "")
-                {
-                    sql = "SELECT * FROM Agendamento AS a WHERE strftime('%y', a.Data)" +
-                        " = '" + ano + "' AND IdAluno = '" + id + "'";
-                }if(ano == "")
-                {
-                    sql = "SELECT * FROM Agendamento AS a WHERE strftime('%m', a.Data) " +
-                        " = '" + mes + "' AND IdAluno = '" + id + "'";
-                }
-                else
-                {
-                    sql = "SELECT * FROM Agendamento AS a WHERE strftime('%m', a.Data) = '" + mes + "' AND strftime('%y', Data) = '" + ano + "' AND IdAluno = '" + id + "'";
-                }
+                DateTime convertido = Convert.ToDateTime(BuscaData);
+
+
+                sql = "SELECT * FROM Agendamento WHERE Data LIKE '" + convertido + "%'";
 
 
                 SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
@@ -185,6 +155,27 @@ namespace Sistema_almoço_alunos.src.Services
             {
                 MessageBox.Show(ex.Message);
                 return null;
+            }
+        }
+
+        public Double SomaTotal(DataTable dt)
+        {
+            double soma = 0;
+
+            try
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    soma = soma + Convert.ToDouble(dt.Rows[i]["Valor"].ToString());
+
+                }
+                return soma;
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return soma;
             }
         }
 
