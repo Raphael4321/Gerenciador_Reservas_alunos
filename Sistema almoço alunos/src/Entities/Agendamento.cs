@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sistema_almoço_alunos.src.Entities
 {
@@ -13,10 +9,6 @@ namespace Sistema_almoço_alunos.src.Entities
         private int idAluno;
 
         private DateTime data;
-
-        private string Inicio;
-
-        private string Fim;
 
         public Plano plano;
 
@@ -48,26 +40,6 @@ namespace Sistema_almoço_alunos.src.Entities
         public void setdata(DateTime data)
         {
             this.data = data;
-        }
-
-        public string getInicio()
-        {
-            return Inicio;
-        }
-
-        public void setInicio(string inicio)
-        {
-            this.Inicio = inicio;
-        }
-
-        public string getFim()
-        {
-            return Fim;
-        }
-
-        public void setFim(string fim)
-        {
-            this.Fim = fim;
         }
 
 

@@ -1,14 +1,7 @@
-﻿using NUnit.Framework;
+﻿using Sistema_almoço_alunos.src.Controllers;
 using Sistema_almoço_alunos.src.Entities;
-using Sistema_almoço_alunos.src.Services;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Sistema_almoço_alunos.src.UI
@@ -16,15 +9,15 @@ namespace Sistema_almoço_alunos.src.UI
     public partial class Historico : Form
     {
 
-        ServiceAge serviceAge = new ServiceAge();
+        Agendamento agendamento = new();
 
-        Agendamento agendamento = new Agendamento();
+        DataTable dt = new();
 
-        ServicePl servicePlano = new ServicePl();
+        ControllerAge controllerAge = new();
 
-        DataTable dt = new DataTable();
+        ControllerPlano controllerPlano = new();
 
-        Aluno aluno = new Aluno();
+        Aluno aluno = new();
 
         public Historico(Aluno aluno)
         {
@@ -35,33 +28,16 @@ namespace Sistema_almoço_alunos.src.UI
             {
                 this.aluno = aluno;
 
-                btnSalvar.Enabled = false;
-                btnSalvar.Visible = false;
-                btnCancelar.Enabled = false;
-                btnCancelar.Visible = false;
-
-                List<string> filtro = new List<string>();
-
-                string dado = "Mês";
-                filtro.Add(dado);
-                dado = "Ano";
-                filtro.Add(dado);
-
                 agendamento.setidAluno(aluno.getid());
 
-                dt = servicePlano.ListaPlanos();
+                // Alimentando a combobox com os planos cadastrados
+                dt = controllerPlano.ListaPlanos();
                 cmbPlano.DataSource = dt;
                 cmbPlano.DisplayMember = "Nome";
                 cmbPlano.ValueMember = "Id";
 
-                Fill(aluno.getid(), txtDataBusca.Text);
-                dtHistorico.Columns["Id"].Visible = false;
-                dtHistorico.Columns["Inicio"].Visible = false;
-                dtHistorico.Columns["Fim"].Visible = false;
-                dtHistorico.Columns["IdAluno"].Visible = false;
-                dtHistorico.Columns["IdPlano"].Visible = false;
-                dtHistorico.Columns["Ano"].Visible = false;
-
+                // Preenchendo a lista de agendamentos feitos pelo aluno
+                Fill(aluno.getid(), txtMes.Text, txtAno.Text) ;
             }
 
             catch (Exception ex)
@@ -73,6 +49,7 @@ namespace Sistema_almoço_alunos.src.UI
 
         private void btnAgen_Click(object sender, EventArgs e)
         {
+            // Preparando formulario para novo cadastro
             setup(1, false, true);
         }
 
@@ -83,54 +60,80 @@ namespace Sistema_almoço_alunos.src.UI
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (textBoxVazias() == true)
+            if (textBoxVazias() == true || MaskedtextBoxVazias() == true)
             {
                 DialogResult confirm = MessageBox.Show("Por favor, preencha todos os campos antes de salvar", "Incluir Aluno", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
             }
             else
             {
+                // Retornando forumalrio para estado original e salvando novo agendamento
+                setup(0, true, false);
+
                 agendamento.plano = new Plano();
                 agendamento.setidAluno(aluno.getid());
                 agendamento.setdata(DateTime.Parse(txtData.Text));
-                agendamento.setInicio(txtInicio.Text);
-                agendamento.setFim(txtFim.Text);
                 agendamento.plano.setid(Convert.ToInt32(cmbPlano.SelectedValue));
-                agendamento.plano.setvalor(Convert.ToDouble(txtValor.Text));
+                controllerAge.salvarAgendamento(agendamento);
 
-                serviceAge.SalvarAgendamento(agendamento);
-                Fill(agendamento.getidAluno(),txtDataBusca.Text);
-                setup(0, true, false);
+                // Preenchendo lista de agendamentos cadsatrados
+                Fill(agendamento.getidAluno(),txtMes.Text, txtAno.Text); 
             }
         }
 
         private void cmbPlano_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Se houverem planos disponiveis, pegar o plano selecionado e exibir seu valor abaixo
             if(cmbPlano.Items.Count > 0)
             {
                 string id = Convert.ToString(cmbPlano.SelectedValue);
-                double valor = servicePlano.SelecionadoValor(id);
+                Plano plano = controllerPlano.Selectplano(id);
 
-                txtValor.Text = Convert.ToString(valor);
+                txtInicio.Text = Convert.ToString(plano.getInicio());
 
-                txtPlano.Text = servicePlano.SelectPlano(id);
+                txtFim.Text = Convert.ToString(plano.getFim());
+
+                txtValor.Text = Convert.ToString(plano.getvalor());
+
+                txtPlano.Text = Convert.ToString(plano.getnome());
             }
         }
 
         private void btnAdcPl_Click(object sender, EventArgs e)
         {
-            PlanoCad planoCad = new PlanoCad();
+           // Abrir janela para cadastrar um novo plano
+            PlanoCad planoCad = new();
 
             planoCad.Show();
-
         }
 
         private bool textBoxVazias()
         {
+            // Para cada campo no formulario
             foreach (Control c in this.Controls)
-                if (c is TextBox && c!=txtDataBusca && c != txtValorTotal && c!=txtPlano)
+                // Verifica se é uma text box e se não é o campo de busca
+                if (c is TextBox && c!=txtMes && c != txtValorTotal && c!=txtPlano)
                 {
+                    // Se não for o campo de busca e for uma text box,
+                    // verifica se está vazia e avisa se houver um campo se quer
+                    // que esteja
                     TextBox textBox = c as TextBox;
                     if (string.IsNullOrWhiteSpace(textBox.Text))
+                        return true;
+                }
+
+            // Também avisa se não á nenhuma text box vazia
+            return false;
+        }
+
+        // Este metodo faz o memso que o metodo anterior, mas
+        // com text boxes que utilizam mascara
+        private bool MaskedtextBoxVazias()
+        {
+            foreach (Control c in this.Controls)
+                if (c is MaskedTextBox && c != txtMes && c != txtAno)
+                {
+                    MaskedTextBox textBox = c as MaskedTextBox;
+                    if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "  /  /" || textBox.Text == "  :")
                         return true;
                 }
             return false;
@@ -138,6 +141,7 @@ namespace Sistema_almoço_alunos.src.UI
 
         private void setup(int sinal, bool state1, bool state2)
         {
+            // Se o sinal for igual a 1, então um novo agendamento esta sendo cadastrado
             if (sinal == 1)
             {
                 agendamento.setid(0);
@@ -149,7 +153,7 @@ namespace Sistema_almoço_alunos.src.UI
           
             }
 
-            //Desbloqueia campos
+            // Define o estado dos campos
             txtData.ReadOnly = state1;
             txtInicio.ReadOnly = state1;
             txtFim.ReadOnly = state1;
@@ -159,19 +163,21 @@ namespace Sistema_almoço_alunos.src.UI
             txtPlano.ReadOnly = state1;
             txtPlano.Visible = state1;
 
-            //Esconde os botões Editar e Detalhe
+            // Define a visibilidade dos botões Editar
             btnEditar.Visible = state1;
-            //Desabilita os botões Editar e detalhe
             btnEditar.Enabled = state1;
 
-            //Habilita os botões Salvar, Cancelar e seleção de plano
+            // Define se os botões Salvar, Cancelar, Recarregar e seleção de plano estarão ativos
             btnSalvar.Enabled = state2;
             btnCancelar.Enabled = state2;
             cmbPlano.Enabled = state2;
-            //Mostra os botões Salvar, Cancelar e seleção de plano
+            btnRecarregar.Enabled = state2;
+            // Define a visibilidade dos botões Salvar, Cancelar, Recarregar e seleção de plano
             btnSalvar.Visible = state2;
             btnCancelar.Visible = state2;
             cmbPlano.Visible = state2;
+            btnRecarregar.Visible = state2;
+            
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
@@ -179,34 +185,10 @@ namespace Sistema_almoço_alunos.src.UI
             setup(0, true, false);
         }
 
-        public List<Plano> convert(DataTable dt)
-        {
-            List<Plano> planos = new List<Plano>();
-
-            Plano plano1 = new Plano();
-
-            planos.Add(plano1);
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                Plano plano = new Plano();
-                plano.setid(Convert.ToInt32(dt.Rows[i]["Id"]));
-                plano.setvalor(Convert.ToDouble(dt.Rows[i]["Valor"]));
-                planos.Add(plano);
-            }
-            return planos;
-        }
-
         private void btnDeletar_Click(object sender, EventArgs e)
         {
-            // Avisando usuario da exclusão dos dados
-            DialogResult confirm = MessageBox.Show("Excluir o aluno também excluirá seus agendamentos. Deseja continuar?", "Excluir Aluno", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-
-            //prosseguir se usuario permitir
-            if (confirm.ToString().ToUpper() == "YES")
-            {
-                serviceAge.DelAgendamento(agendamento);
-                Fill(aluno.getid(), txtDataBusca.Text);
-            }
+            controllerAge.DeletarAgendamento(agendamento);
+            Fill(aluno.getid(), txtMes.Text, txtAno.Text);
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
@@ -214,31 +196,29 @@ namespace Sistema_almoço_alunos.src.UI
             setup(0, false, true);
         }
 
-        private void btnRelatorio_Click(object sender, EventArgs e)
+        public void Fill(int id, string mes, string ano)
         {
+            DataTable consulta = new();
 
-        }
-
-        public void Fill(int id, string data)
-        {
-            DataTable consulta = new DataTable();
-
-            
             // preenchendo a tabela com os dados no banco
-            if (data == "  /  /") 
-            {
-                consulta = serviceAge.listAgendamentos(id);
-
-            }
-            else { consulta = serviceAge.listAgendamentoEsp(id, data);  }
-
+             consulta = controllerAge.ListarAgendamentos(id, mes, ano);
 
             dtHistorico.DataSource = consulta;
 
+            dtHistorico.Columns["Id"].Visible = false;
+            dtHistorico.Columns["IdAluno"].Visible = false;
+            dtHistorico.Columns["IdPlano"].Visible = false;
+            dtHistorico.Columns["Id1"].Visible = false;
+            dtHistorico.Columns["Nome"].Visible = false;
+            dtHistorico.Columns["Inicio"].Visible = false;
+            dtHistorico.Columns["Fim"].Visible = false;
+            dtHistorico.Columns["Ano"].Visible = false;
+
             // determina o tamanho das colunas na tabela
+            dtHistorico.Columns["Data"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dtHistorico.Columns["Valor"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-
-            double total = serviceAge.SomaTotal(consulta);
+            double total = controllerAge.SomaTotal(consulta);
 
             txtValorTotal.Text = Convert.ToString(total);
             // recarregando a tabela para garantir
@@ -247,29 +227,36 @@ namespace Sistema_almoço_alunos.src.UI
 
         private void dtHistorico_SelectionChanged(object sender, EventArgs e)
         {
+            setup(0, true, false);
             if (dtHistorico.CurrentRow != null)
             {
                 agendamento.plano = new Plano();
                 agendamento.setid(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Id"].Value));
-                agendamento.setidAluno(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Id"].Value));
+                agendamento.setidAluno(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["IdAluno"].Value));
                 agendamento.setdata(DateTime.Parse(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Data"].Value.ToString()));
-                agendamento.setInicio(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Inicio"].Value.ToString());
-                agendamento.setFim(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Fim"].Value.ToString());
-                agendamento.plano.setid(Convert.ToInt32(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["IdPlano"].Value));
-                agendamento.plano.setvalor(Convert.ToDouble(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Valor"].Value.ToString()));
+                agendamento.plano = controllerPlano.Selectplano(dtHistorico.Rows[dtHistorico.CurrentRow.Index].Cells["Id1"].Value.ToString());
 
                 txtPlano.Text = cmbPlano.SelectedText;
                 txtData.Text = Convert.ToString(agendamento.getdata());
-                txtInicio.Text = Convert.ToString(agendamento.getInicio());
-                txtFim.Text = Convert.ToString(agendamento.getFim());
+                txtInicio.Text = agendamento.plano.getInicio();
+                txtFim.Text = agendamento.plano.getFim();
                 cmbPlano.SelectedValue = agendamento.plano.getid();
+                txtValor.Text = Convert.ToString(agendamento.plano.getvalor());
+                txtPlano.Text = agendamento.plano.getnome();
             }
-           
         }
 
         private void btnBusca_Click(object sender, EventArgs e)
         {
-            Fill(aluno.getid(), txtDataBusca.Text);
+            Fill(aluno.getid(), txtMes.Text, txtAno.Text);
+        }
+
+        private void btnRecarregar_Click(object sender, EventArgs e)
+        {
+            dt = controllerPlano.ListaPlanos();
+            cmbPlano.DataSource = dt;
+            cmbPlano.DisplayMember = "Nome";
+            cmbPlano.ValueMember = "Id";
         }
     }
 }

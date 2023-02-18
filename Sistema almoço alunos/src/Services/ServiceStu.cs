@@ -1,34 +1,26 @@
 ﻿using Sistema_almoço_alunos.src.Entities;
 using Sistema_almoço_alunos.src.Utils;
 using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing;
-using Sistema_almoço_alunos.src.Utils.dto;
-using System.Net.NetworkInformation;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Sistema_almoço_alunos.src.Services
 {
     internal class ServiceStu
     {
-        Conexao con = new Conexao();
+        Conexao con = new();
         public Aluno buscarPorId(int id)
         {
-            Aluno aluno = new Aluno();
+            Aluno aluno = new();
 
-            DataTable dt = new DataTable();
+            DataTable dt = new();
 
             con.conectar();
 
             string sql = "SELECT * FROM Aluno WHERE Id = '" + id + "'";
 
-            SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
+            SQLiteDataAdapter data = new(sql, con.conect);
 
             con.desconectar();
 
@@ -53,38 +45,13 @@ namespace Sistema_almoço_alunos.src.Services
 
 
         // salvar aluno
-        public bool SalvarAluno(Aluno aluno)
+        public void SalvarAluno(Aluno aluno)
         {
-            // Instanciando a variavel onde o comando é guardado
-            string sql;
-
-            //se for encontrado Um Id no aluno, então ele ja existe e se trata de uma edição
-            if (aluno.getid() > 0)
+            try
             {
-                con.conectar();
+                // Instanciando a variavel onde o comando é guardado
+                string sql;
 
-                sql = "Update Alunos SET Nome = @n, Responsavel = @r, Telefone = @t, Turma = @t2 WHERE Id=@i";
-
-                SQLiteCommand parametros = new SQLiteCommand(con.conect);
-
-                // Estabelecendo o texto do comando e o que cada @ significa a seguir
-                parametros.CommandText = sql;
-
-                parametros.Parameters.AddWithValue("@i", aluno.getid());
-                parametros.Parameters.AddWithValue("@n", aluno.getnome());
-                parametros.Parameters.AddWithValue("@r", aluno.getresponsavel());
-                parametros.Parameters.AddWithValue("@t", aluno.gettelefone());
-                parametros.Parameters.AddWithValue("@t2", aluno.getTurma());
-
-                //Efetiva o comando o comando
-                parametros.ExecuteNonQuery();
-
-                //Descondectando do banco de dados
-                con.desconectar();
-            }
-            // Se não encontrar, trata-se de um novo aluno que será salvo no banco de dados
-            else
-            {
                 // Conectando ao banco de dados
                 con.conectar();
 
@@ -92,7 +59,7 @@ namespace Sistema_almoço_alunos.src.Services
                 sql = "INSERT INTO Alunos (Nome, Responsavel, Telefone, Turma) values(@n, @r, @t, @t2)";
 
                 //Estabelecendo a conexão do comando com o banco de dados
-                SQLiteCommand parametros = new SQLiteCommand(con.conect);
+                SQLiteCommand parametros = new(con.conect);
 
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
@@ -107,70 +74,79 @@ namespace Sistema_almoço_alunos.src.Services
 
                 //Descondectando do banco de dados
                 con.desconectar();
-            }
+            
             //Tenta executar o comando. Se funcionar, retorna o ok
-            try
-            {
-                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
-                return true;
+            
+                SQLiteDataAdapter data = new(sql, con.conect);
+        
             }
             //Se não funcionar, retorna que não funcionou junto com uma janela dizendo o motivo
             catch (Exception e)
             {
                 MessageBox.Show("erro: " + e);
-                return false;
+         
             }
 
         }
 
-        public DataTable listAlunos()
+        public void AtualizarAluno(Aluno aluno)
         {
             try
             {
-                Conexao con = new Conexao();
+                //se for encontrado Um Id no aluno, então ele ja existe e se trata de uma edição
+                if (aluno.getid() > 0)
+                {
+                    con.conectar();
 
-                con.conectar();
-                string sql = "SELECT * FROM Alunos";
-                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
-                DataTable dt = new DataTable();
+                    string sql = "Update Alunos SET Nome = @n, Responsavel = @r, Telefone = @t, Turma = @t2 WHERE Id=@i";
 
-                    data.Fill(dt);
+                    SQLiteCommand parametros = new(con.conect);
 
-                con.desconectar();
-                return dt;
-                
+                    // Estabelecendo o texto do comando e o que cada @ significa a seguir
+                    parametros.CommandText = sql;
+
+                    parametros.Parameters.AddWithValue("@i", aluno.getid());
+                    parametros.Parameters.AddWithValue("@n", aluno.getnome());
+                    parametros.Parameters.AddWithValue("@r", aluno.getresponsavel());
+                    parametros.Parameters.AddWithValue("@t", aluno.gettelefone());
+                    parametros.Parameters.AddWithValue("@t2", aluno.getTurma());
+
+                    //Efetiva o comando o comando
+                    parametros.ExecuteNonQuery();
+
+                    //Descondectando do banco de dados
+                    con.desconectar();
+                }
             }
-
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
-                return null;
-            }
+                MessageBox.Show("erro: " + ex);
 
+            }
         }
 
-        public DataTable listAlunosEsp(string text, string filtro)
+
+
+        public DataTable listAlunos(string text, string filtro)
         {
             try
             {
-                Conexao con = new Conexao();
+                Conexao con = new();
 
                 con.conectar();
 
-                string sql = "SELECT * FROM Alunos WHERE "+filtro+" LIKE '"+text+"%'";
+                string sql = "SELECT * FROM Alunos WHERE " + filtro + " LIKE '" + text + "%'";
 
-                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
+                SQLiteDataAdapter data = new(sql, con.conect);
 
-                DataTable dt = new DataTable();
+                DataTable dt = new();
 
                 data.Fill(dt);
 
                 con.desconectar();
                 return dt;
 
-            }
-
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 return null;
@@ -187,7 +163,7 @@ namespace Sistema_almoço_alunos.src.Services
                 string sql = "DELETE FROM Alunos WHERE Id=@i";
 
                 //Estabelecendo a conexão do comando com o banco de dados
-                SQLiteCommand parametros = new SQLiteCommand(con.conect);
+                SQLiteCommand parametros = new(con.conect);
 
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
@@ -210,20 +186,5 @@ namespace Sistema_almoço_alunos.src.Services
             }
         }
 
-        public List<string> listFiltro()
-        {
-            List<string> filtro = new List<string>();
-
-            string dado = "Nome";
-            filtro.Add(dado);
-            dado = "Turma";
-            filtro.Add(dado);
-            dado = "Telefone";
-            filtro.Add(dado);
-            dado = "Responsavel";
-            filtro.Add(dado);
-
-            return filtro;
-        }
     }
 }

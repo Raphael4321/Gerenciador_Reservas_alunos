@@ -1,22 +1,16 @@
-﻿using Sistema_almoço_alunos.src.Entities;
-using Sistema_almoço_alunos.src.Services;
+﻿using Sistema_almoço_alunos.src.Controllers;
+using Sistema_almoço_alunos.src.Entities;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Sistema_almoço_alunos.src.UI
 {
     public partial class PlanoCad : Form
     {
-        ServicePl servicePl = new ServicePl();
 
-        Plano plano = new Plano();
+        Plano plano = new();
+        ControllerPlano controllerPlano = new();
 
         public PlanoCad()
         {
@@ -27,12 +21,17 @@ namespace Sistema_almoço_alunos.src.UI
 
         public void Fill()
         {
-            DataTable consulta = new DataTable();
+            DataTable consulta = new();
 
             // preenchendo a tabela com os dados no banco
-            consulta = servicePl.ListaPlanos();
+            consulta = controllerPlano.ListaPlanos();
 
             dtPlanos.DataSource = consulta;
+            dtPlanos.Columns["Id"].Visible = false;
+            dtPlanos.Columns["Inicio"].Visible = false;
+            dtPlanos.Columns["Fim"].Visible = false;
+            dtPlanos.Columns["Nome"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dtPlanos.Columns["Valor"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             // recarregando a tabela para garantir
             dtPlanos.Refresh();
@@ -40,50 +39,57 @@ namespace Sistema_almoço_alunos.src.UI
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            ServicePl sr = new ServicePl();
+            // Salvando novo plano com os dados fornecidos
 
-            Plano pla = new Plano();
+            plano.setnome(txtNome.Text);
+            plano.setvalor(Convert.ToDouble(txtValor.Text));
+            plano.setInicio(txtInicio.Text);
+            plano.setFim(txtFim.Text);
+            
 
-            pla.setnome(txtNome.Text);
-            pla.setvalor(Convert.ToDouble(txtValor.Text));
-
-            sr.savePl(pla);
-
+            controllerPlano.salvar(plano);
+            
+            // Preenchendo a lista de planos disponiveis
             Fill();
 
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            setupPl(0, true, false);
         }
 
         private void setupPl(int sinal, bool state1, bool state2)
         {
+            // Se o sinal for igual a 1, um novo plano esta sendo cadastrado
             if (sinal == 1)
             {
                 plano.setid(0);
                 txtNome.Text = null;
+                txtInicio.Text = null;
+                txtFim.Text = null;
                 txtValor.Text = null;
 
             }
 
-            //Desbloqueia campos
+            // Define estado dos campos
             txtNome.ReadOnly = state1;
             txtValor.ReadOnly = state1;
+            txtInicio.ReadOnly = state1;
+            txtFim.ReadOnly = state1;
 
 
-            //Esconde os botões Editar e Detalhe
+            //Define visibilidade dos botoes Editar e Detalhe
             btnEdit.Visible = state1;
-            btnCancel.Visible = state1;
-            //Desabilita os botões Editar e detalhe
+            btnDeletar.Visible = state1;
+            //Define se os botões Editar e detalhe estarão ativos
             btnEdit.Enabled = state1;
-            btnCancel.Enabled = state1;
+            btnDeletar.Enabled = state1;
 
-            //Habilita os botões Salvar e Cancelar
+            // Define se os botões Salvar e Cancelar estarão ativos
             btnSave.Enabled = state2;
             btnCancel.Enabled = state2;
-            //Mostra os botões Salvar e Cancelar
+            // Define a visibilidade dos botões Salvar e Cancelar
             btnSave.Visible = state2;
             btnCancel.Visible = state2;
 
@@ -96,22 +102,34 @@ namespace Sistema_almoço_alunos.src.UI
 
         private void dtPlanos_SelectionChanged(object sender, EventArgs e)
         {
-            if (dtPlanos.CurrentRow != null)
+
+            setupPl(0, true, false);
+            try { 
+                 if (dtPlanos.CurrentRow != null)
+                 {
+                     DateTime hora;
+                     plano.setid(Convert.ToInt32(dtPlanos.Rows[dtPlanos.CurrentRow.Index].Cells["Id"].Value));
+                     plano.setnome(Convert.ToString(dtPlanos.Rows[dtPlanos.CurrentRow.Index].Cells["Nome"].Value));
+                     plano.setvalor(Convert.ToDouble(dtPlanos.Rows[dtPlanos.CurrentRow.Index].Cells["Valor"].Value.ToString()));
+                     hora = Convert.ToDateTime(dtPlanos.Rows[dtPlanos.CurrentRow.Index].Cells["Inicio"].Value);
+                     plano.setInicio(Convert.ToString(hora.TimeOfDay));
+                     hora = Convert.ToDateTime(dtPlanos.Rows[dtPlanos.CurrentRow.Index].Cells["Fim"].Value);
+                     plano.setFim(Convert.ToString(hora.TimeOfDay));
+
+                     txtNome.Text = plano.getnome();
+                     txtInicio.Text = plano.getInicio();
+                     txtFim.Text = plano.getFim();
+                     txtValor.Text = Convert.ToString(plano.getvalor());
+
+                     if (plano.getid() > 0)
+                     {
+                         setupPl(0, true, false);
+                     }
+                 }
+            } catch(Exception ex)
             {
-                Plano plano = new Plano();
-                plano.setid(Convert.ToInt32(dtPlanos.Rows[dtPlanos.CurrentRow.Index].Cells["Id"].Value));
-                plano.setnome(Convert.ToString(dtPlanos.Rows[dtPlanos.CurrentRow.Index].Cells["Nome"].Value));
-                plano.setvalor(Convert.ToDouble(dtPlanos.Rows[dtPlanos.CurrentRow.Index].Cells["Valor"].Value.ToString()));
-
-                txtNome.Text = plano.getnome();
-                txtValor.Text = Convert.ToString(plano.getvalor());
-
-                if (plano.getid() > 0)
-                {
-                    setupPl(0, true, false);
-                }
+                MessageBox.Show("Erro: " + ex);
             }
-                
         }
 
         private void btnNew_Click(object sender, EventArgs e)
@@ -119,9 +137,15 @@ namespace Sistema_almoço_alunos.src.UI
             setupPl(1, false, true);
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void btnFechar_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnDeletar_Click(object sender, EventArgs e)
+        {
+            controllerPlano.deletarPlano(plano.getid());
+            Fill();
         }
     }
 }

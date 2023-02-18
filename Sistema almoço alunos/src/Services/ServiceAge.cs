@@ -1,69 +1,70 @@
-﻿using NUnit.Framework.Internal;
-using Sistema_almoço_alunos.src.Entities;
+﻿using Sistema_almoço_alunos.src.Entities;
 using Sistema_almoço_alunos.src.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.Entity;
 using System.Data.SQLite;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Sistema_almoço_alunos.src.Services
 {
     internal class ServiceAge
     {
-        Conexao con = new Conexao();
+        Conexao con = new();
 
-        // salvar Agendamento (incompleto)
-        public bool SalvarAgendamento(Agendamento age)
+        public void AtualizarAgendamento(Agendamento age)
         {
-            // Instanciando a variavel onde o comando é guardado
-            string sql;
-
-            int ano = Convert.ToInt32(age.getdata().Year);
-
-            //se for encontrado Um Id no aluno, então ele ja existe e se trata de uma edição
-            if (age.getid() > 0)
+            try
             {
+                // Conecta ao bando de dados
                 con.conectar();
 
-                sql = "Update Agendamento SET Data = @d, Ano = @a, Inicio=@in, Fim=@f, Valor=@v WHERE Id=@id";
+                int ano = Convert.ToInt32(age.getdata().Year);
 
-                SQLiteCommand parametros = new SQLiteCommand(con.conect);
+                // Comando para atualizar dados do agendamento
+                string sql = "Update Agendamento SET Data = @d, Ano = @a, IdPlano = @p WHERE Id=@id";
+
+                SQLiteCommand parametros = new(con.conect);
 
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
 
                 parametros.Parameters.AddWithValue("@id", age.getid());
-                parametros.Parameters.AddWithValue("@i", age.getidAluno());
+                parametros.Parameters.AddWithValue("@p", age.plano.getid());
                 parametros.Parameters.AddWithValue("@d", age.getdata());
                 parametros.Parameters.AddWithValue("@a", ano);
-                parametros.Parameters.AddWithValue("@in", age.getInicio());
-                parametros.Parameters.AddWithValue("@f", age.getFim());
-                parametros.Parameters.AddWithValue("@v", age.plano.getvalor());
 
                 //Efetiva o comando o comando
                 parametros.ExecuteNonQuery();
 
                 //Descondectando do banco de dados
                 con.desconectar();
+                SQLiteDataAdapter data = new(sql, con.conect);
+
             }
-            // Se não encontrar, trata-se de um novo aluno que será salvo no banco de dados
-            else
+            catch(Exception e)
             {
+                MessageBox.Show("erro: " + e);
+            }
+        }
+
+        // salvar Agendamento (incompleto)
+        public void SalvarAgendamento(Agendamento age)
+        {
+            try
+            {
+                // Instanciando a variavel onde o comando é guardado
+                string sql;
+
+                int ano = Convert.ToInt32(age.getdata().Year);
+
                 // Conectando ao banco de dados
                 con.conectar();
 
                 // Estabelecendo o comando
-                sql = "INSERT INTO Agendamento (IdAluno, IdPlano, Data, Ano, Inicio, Fim, Valor) values(@i, @p, @d, @a, @in, @f, @v)";
+                sql = "INSERT INTO Agendamento (IdAluno, IdPlano, Data, Ano) values(@i, @p, @d, @a)";
 
                 //Estabelecendo a conexão do comando com o banco de dados
-                SQLiteCommand parametros = new SQLiteCommand(con.conect);
+                SQLiteCommand parametros = new(con.conect);
 
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
@@ -72,48 +73,45 @@ namespace Sistema_almoço_alunos.src.Services
                 parametros.Parameters.AddWithValue("@p", age.plano.getid());
                 parametros.Parameters.AddWithValue("@d", age.getdata());
                 parametros.Parameters.AddWithValue("@a", ano);
-                parametros.Parameters.AddWithValue("@in", age.getInicio());
-                parametros.Parameters.AddWithValue("@f", age.getFim());
-                parametros.Parameters.AddWithValue("@v", age.plano.getvalor());
-
 
                 //Efetiva o comando o comando
                 parametros.ExecuteNonQuery();
 
                 //Descondectando do banco de dados
                 con.desconectar();
-            }
-            //Tenta executar o comando. Se funcionar, retorna o ok
-            try
-            {
-                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
-                return true;
+            
+                //Tenta executar o comando. Se funcionar, retorna o ok
+            
+                SQLiteDataAdapter data = new(sql, con.conect);
+                
             }
             //Se não funcionar, retorna que não funcionou junto com uma janela dizendo o motivo
             catch (Exception e)
             {
                 MessageBox.Show("erro: " + e);
-                return false;
             }
 
         }
 
-        public DataTable listAgendamentos(int id)
+        public DataTable listAgendamentos(int id, string mes, string ano)
         {
             try
             {
-                Conexao con = new Conexao();
+                Conexao con = new();
 
                 con.conectar();
-                string sql = "SELECT * FROM Agendamento WHERE IdAluno = '" + id +"'";
-                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
-                DataTable dt = new DataTable();
+
+                // Comando para selecionar todos os agendamentos com os dados dos planose relacionados a eles, tudo baseado no aluno
+                string sql = "SELECT * FROM Agendamento AS a INNER JOIN Plano AS p ON a.IdAluno = '" + id + "' AND a.Ano LIKE '" + ano + "%' AND  strftime('%m', a.Data) LIKE '" + mes + "%' AND p.Id = a.IdPlano";
+
+                SQLiteDataAdapter data = new(sql, con.conect);
+
+                DataTable dt = new();
 
                 data.Fill(dt);
 
                 con.desconectar();
                 return dt;
-
             }
 
             catch (Exception ex)
@@ -121,34 +119,26 @@ namespace Sistema_almoço_alunos.src.Services
                 MessageBox.Show(ex.Message);
                 return null;
             }
-
         }
 
-        public DataTable listAgendamentoEsp(int id, string BuscaData)
+        public DataTable listGeralAgendamentos(string mes, string ano)
         {
             try
             {
-                Conexao con = new Conexao();
+                Conexao con = new();
 
                 con.conectar();
 
-                string sql;
+                string sql = "SELECT * FROM Agendamento AS a INNER JOIN Plano AS p ON a.Ano LIKE '" + ano + "%' AND  strftime('%m', a.Data) LIKE '" + mes + "%' AND p.Id = a.IdPlano";
 
-                DateTime convertido = Convert.ToDateTime(BuscaData);
+                SQLiteDataAdapter data = new(sql, con.conect);
 
-
-                sql = "SELECT * FROM Agendamento WHERE Data LIKE '" + convertido + "%'";
-
-
-                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
-
-                DataTable dt = new DataTable();
+                DataTable dt = new();
 
                 data.Fill(dt);
 
                 con.desconectar();
                 return dt;
-
             }
 
             catch (Exception ex)
@@ -166,10 +156,11 @@ namespace Sistema_almoço_alunos.src.Services
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    soma = soma + Convert.ToDouble(dt.Rows[i]["Valor"].ToString());
-
+                    double valor = Convert.ToDouble(dt.Rows[i]["Valor"].ToString());
+                    if(valor !=0)
+                    soma = soma + valor;
                 }
-                return soma;
+                return Math.Round(soma, 2);
             }
 
             catch (Exception ex)
@@ -189,7 +180,7 @@ namespace Sistema_almoço_alunos.src.Services
                 string sql = "DELETE FROM Agendamento WHERE Id=@i";
 
                 //Estabelecendo a conexão do comando com o banco de dados
-                SQLiteCommand parametros = new SQLiteCommand(con.conect);
+                SQLiteCommand parametros = new(con.conect);
 
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
@@ -222,7 +213,7 @@ namespace Sistema_almoço_alunos.src.Services
                 string sql = "DELETE FROM Agendamento WHERE IdAluno=@i";
 
                 //Estabelecendo a conexão do comando com o banco de dados
-                SQLiteCommand parametros = new SQLiteCommand(con.conect);
+                SQLiteCommand parametros = new(con.conect);
 
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
@@ -242,6 +233,39 @@ namespace Sistema_almoço_alunos.src.Services
             {
                 MessageBox.Show(ex.Message);
 
+            }
+        }
+
+        public int ProcurarAgeUsaPl(int idPlano)
+        {
+            try
+            {
+                Conexao con = new();
+
+                con.conectar();
+                string sql = "SELECT * FROM Agendamento WHERE IdPlano = '" + idPlano + "'";
+                SQLiteDataAdapter data = new(sql, con.conect);
+                DataTable dt = new();
+
+                data.Fill(dt);
+
+                con.desconectar();
+
+                if(dt.Rows.Count > 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return 2;
             }
         }
     }
