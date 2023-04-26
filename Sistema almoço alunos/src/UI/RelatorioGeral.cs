@@ -24,13 +24,14 @@ namespace Sistema_almoço_alunos.src.UI
         private void btnFechar_Click(object sender, EventArgs e)
         {
             this.Close();
+            
         }
 
         public void Fill(string nome, string mes, string ano)
         {
-            ControllerAge control = new();
+            AgendamentoController control = new();
 
-            dtRelatorio.DataSource = control.relatorio(nome, mes, ano);
+            dtRelatorio.DataSource = util.Relatorio(nome, mes, ano);
 
             dtRelatorio.Columns["Nome do aluno"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dtRelatorio.Columns["Valor total"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

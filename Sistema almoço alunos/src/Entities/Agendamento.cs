@@ -4,44 +4,13 @@ namespace Sistema_almoço_alunos.src.Entities
 {
     internal class Agendamento
     {
-        private int id;
+        public int Id { get; set; }
 
-        private int idAluno;
+        public int IdAluno { get; set; }
 
-        private DateTime data;
+        public DateTime Data { get; set; }
 
-        public Plano plano;
-
-        public int getid()
-        {
-            return id;
-        }
-
-        public void setid(int id)
-        {
-            this.id = id;
-        }
-
-        public int getidAluno()
-        {
-            return idAluno;
-        }
-
-        public void setidAluno(int id)
-        {
-            this.idAluno = id;
-        }
-
-        public DateTime getdata()
-        {
-            return data;
-        }
-
-        public void setdata(DateTime data)
-        {
-            this.data = data;
-        }
-
-
+        public Plano Plano { get; set; }
     }
+
 }

@@ -75,12 +75,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Controllers\ControllerAge.cs" />
-    <Compile Include="src\Controllers\ControllerPlano.cs" />
-    <Compile Include="src\Controllers\ControllerStu.cs" />
-    <Compile Include="src\Services\ServiceAge.cs" />
-    <Compile Include="src\Services\ServicePl.cs" />
-    <Compile Include="src\Services\ServiceStu.cs" />
+    <Compile Include="src\Controllers\AgendamentoController.cs" />
+    <Compile Include="src\Controllers\PlanoController.cs" />
+    <Compile Include="src\Controllers\AlunoController.cs" />
+    <Compile Include="src\Controllers\TurmaController.cs" />
+    <Compile Include="src\Entities\Turma.cs" />
+    <Compile Include="src\Repository\AgendamentoRepository.cs" />
+    <Compile Include="src\Repository\AlunoRepository.cs" />
+    <Compile Include="src\Repository\PlanoRepository.cs" />
+    <Compile Include="src\Repository\TurmaRepository.cs" />
+    <Compile Include="src\Services\AgendamentoService.cs" />
+    <Compile Include="src\Services\PlanoService.cs" />
+    <Compile Include="src\Services\AlunoService.cs" />
+    <Compile Include="src\Services\TurmaService.cs" />
     <Compile Include="src\UI\RelatorioGeral.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,23 +100,17 @@
     <Compile Include="src\UI\Inicio.Designer.cs">
       <DependentUpon>Inicio.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\UI\Historico.cs">
+    <Compile Include="src\UI\Gerenciamento.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\UI\Historico.Designer.cs">
-      <DependentUpon>Historico.cs</DependentUpon>
+    <Compile Include="src\UI\Gerenciamento.Designer.cs">
+      <DependentUpon>Gerenciamento.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Entities\Aluno.cs" />
     <Compile Include="src\Entities\Plano.cs" />
     <Compile Include="src\Entities\Agendamento.cs" />
-    <Compile Include="src\UI\PlanoCad.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\UI\PlanoCad.Designer.cs">
-      <DependentUpon>PlanoCad.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\Utils\Conexão_banco.cs" />
     <Compile Include="src\Utils\Utilidades.cs" />
     <EmbeddedResource Include="src\UI\RelatorioGeral.resx">
@@ -118,8 +119,8 @@
     <EmbeddedResource Include="src\UI\Inicio.resx">
       <DependentUpon>Inicio.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\UI\Historico.resx">
-      <DependentUpon>Historico.cs</DependentUpon>
+    <EmbeddedResource Include="src\UI\Gerenciamento.resx">
+      <DependentUpon>Gerenciamento.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -130,9 +131,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="src\UI\PlanoCad.resx">
-      <DependentUpon>PlanoCad.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

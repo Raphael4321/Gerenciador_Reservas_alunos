@@ -52,3 +52,29 @@ C:\Users\Teste\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\
 C:\Users\Teste\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.CopyComplete
 C:\Users\Teste\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.exe
 C:\Users\Teste\Desktop\projeto\RH\Sistema almoço alunos\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.pdb
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\Sistema almoço alunos.exe.config
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\Sistema almoço alunos.exe
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\Sistema almoço alunos.pdb
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\EntityFramework.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\nunit.framework.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\System.Data.SQLite.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\EntityFramework.xml
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\nunit.framework.xml
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\System.Data.SQLite.xml
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.AssemblyReference.cache
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.SuggestedBindingRedirects.cache
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.RelatorioGeral.resources
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.CadAluno.resources
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.Properties.Resources.resources
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.GenerateResource.cache
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.CoreCompileInputs.cache
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.csproj.CopyComplete
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.exe
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.pdb
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.Gerenciamento.resources

@@ -1,13 +1,13 @@
-﻿using Sistema_almoço_alunos.src.Utils;
+﻿using Sistema_almoço_alunos.src.Entities;
+using Sistema_almoço_alunos.src.Utils;
 using System;
 using System.Data.SQLite;
 using System.Data;
 using System.Windows.Forms;
-using Sistema_almoço_alunos.src.Entities;
 
-namespace Sistema_almoço_alunos.src.Services
+namespace Sistema_almoço_alunos.src.Repository
 {
-    internal class ServicePl
+    internal class PlanoRepository
     {
         Conexao con = new();
 
@@ -18,7 +18,7 @@ namespace Sistema_almoço_alunos.src.Services
                 // Conectando ao banco de dados
                 con.conectar();
 
-                // Estabelecendo o comando
+                // Inserindo o comando
                 string sql = "INSERT INTO Plano (Nome, Valor, Inicio, Fim) values(@n, @v, @i, @f)";
 
                 //Estabelecendo a conexão do comando com o banco de dados
@@ -27,10 +27,10 @@ namespace Sistema_almoço_alunos.src.Services
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
 
-                parametros.Parameters.AddWithValue("@n", plano.getnome());
-                parametros.Parameters.AddWithValue("@v", plano.getvalor());
-                parametros.Parameters.AddWithValue("@i", plano.getInicio());
-                parametros.Parameters.AddWithValue("@f", plano.getFim());
+                parametros.Parameters.AddWithValue("@n", plano.Nome);
+                parametros.Parameters.AddWithValue("@v", plano.Valor);
+                parametros.Parameters.AddWithValue("@i", plano.Inicio);
+                parametros.Parameters.AddWithValue("@f", plano.Fim);
 
 
                 //Efetiva o comando o comando
@@ -39,12 +39,12 @@ namespace Sistema_almoço_alunos.src.Services
                 //Descondectando do banco de dados
                 con.desconectar();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Erro: " + ex.Message);
             }
 
-  
+
         }
 
         public void updatePL(Plano plano)
@@ -60,11 +60,11 @@ namespace Sistema_almoço_alunos.src.Services
                 // Estabelecendo o texto do comando e o que cada @ significa a seguir
                 parametros.CommandText = sql;
 
-                parametros.Parameters.AddWithValue("@i", plano.getid());
-                parametros.Parameters.AddWithValue("@n", plano.getnome());
-                parametros.Parameters.AddWithValue("@v", plano.getvalor());
-                parametros.Parameters.AddWithValue("@in", plano.getInicio());
-                parametros.Parameters.AddWithValue("@f", plano.getFim());
+                parametros.Parameters.AddWithValue("@i", plano.Id);
+                parametros.Parameters.AddWithValue("@n", plano.Nome);
+                parametros.Parameters.AddWithValue("@v", plano.Valor);
+                parametros.Parameters.AddWithValue("@in", plano.Inicio);
+                parametros.Parameters.AddWithValue("@f", plano.Fim);
 
 
                 //Efetiva o comando o comando
@@ -72,72 +72,90 @@ namespace Sistema_almoço_alunos.src.Services
 
                 //Descondectando do banco de dados
                 con.desconectar();
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("Erro: " + ex);
             }
 
         }
 
-        public DataTable ListaPlanos()
+        public DataTable ListarPlanos(string text)
         {
             try
             {
-                con.conectar();
-                string sql = "SELECT * FROM Plano";
-                SQLiteDataAdapter data = new(sql, con.conect);
-                DataTable dt = new();
+                // Cria uma nova conexão com o banco de dados
+                Conexao con = new Conexao();
 
+                // Abre a conexão
+                con.conectar();
+
+                // Monta a consulta SQL para buscar os dados dos planos utilizando o filtro
+                string sql = "SELECT * FROM Plano WHERE Nome LIKE @text";
+
+                // Cria um novo adaptador de dados SQLite e passa a consulta e conexão como parâmetros
+                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
+
+                // Adiciona o parâmetro @text na consulta SQL
+                data.SelectCommand.Parameters.AddWithValue("@text", text + "%");
+
+                // Cria uma nova DataTable para armazenar os dados retornados
+                DataTable dt = new DataTable();
+
+                // Preenche a DataTable com os dados retornados pela consulta
                 data.Fill(dt);
 
+                // Fecha a conexão com o banco de dados
                 con.desconectar();
+
+                // Retorna a DataTable preenchida
                 return dt;
             }
-
             catch (Exception ex)
             {
+                // Em caso de exceção, exibe uma mensagem de erro e retorna nulo
                 MessageBox.Show(ex.Message);
                 return null;
             }
-
         }
+
 
         public Plano SelectPlano(string id)
         {
             try
             {
+                // Inicia conexão com o banco de dados
                 Conexao con = new();
-
                 con.conectar();
+
+                // Seleciona o registro da tabela Plano com o id especificado
                 string sql = "SELECT * FROM Plano WHERE Id = '" + id + "'";
                 SQLiteDataAdapter data = new(sql, con.conect);
-                DataTable dt = new();
 
+                // Cria um objeto DataTable e preenche com os dados da consulta
+                DataTable dt = new();
                 data.Fill(dt);
 
+                // Cria um objeto Plano e preenche com os dados do registro selecionado
                 Plano pl = new();
-
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    DateTime hora;
-
-                    pl.setid(Convert.ToInt32(dt.Rows[i]["Id"].ToString()));
-                    pl.setnome(dt.Rows[i]["Nome"].ToString());
-                    pl.setvalor(Convert.ToDouble(dt.Rows[i]["Valor"].ToString()));
-                    hora = Convert.ToDateTime(dt.Rows[i]["Inicio"].ToString());
-                    pl.setInicio(Convert.ToString(hora.TimeOfDay));
+                    pl.Id = Convert.ToInt32(dt.Rows[i]["Id"].ToString());
+                    pl.Nome = dt.Rows[i]["Nome"].ToString();
+                    pl.Valor = Convert.ToDouble(dt.Rows[i]["Valor"].ToString());
+                    DateTime hora = Convert.ToDateTime(dt.Rows[i]["Inicio"].ToString());
+                    pl.Inicio = Convert.ToString(hora.TimeOfDay);
                     hora = Convert.ToDateTime(dt.Rows[i]["Fim"].ToString());
-                    pl.setFim(Convert.ToString(hora.TimeOfDay));
-
+                    pl.Fim = Convert.ToString(hora.TimeOfDay);
                 }
 
-
+                // Encerra conexão com o banco de dados e retorna o objeto Plano
                 con.desconectar();
                 return pl;
             }
-
             catch (Exception ex)
             {
+                // Em caso de erro, mostra a mensagem na tela e retorna null
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -147,36 +165,38 @@ namespace Sistema_almoço_alunos.src.Services
         {
             try
             {
+                // Inicia conexão com o banco de dados
                 Conexao con = new();
-
                 con.conectar();
-                string sql = "SELECT Valor FROM Plano WHERE Id = '"+id+"'";
-                SQLiteDataAdapter data = new(sql, con.conect);
-                DataTable dt = new();
 
+                // Seleciona o valor do registro da tabela Plano com o id especificado
+                string sql = "SELECT Valor FROM Plano WHERE Id = '" + id + "'";
+                SQLiteDataAdapter data = new(sql, con.conect);
+
+                // Cria um objeto DataTable e preenche com os dados da consulta
+                DataTable dt = new();
                 data.Fill(dt);
 
+                // Cria um objeto Plano e preenche com o valor do registro selecionado
                 Plano pl = new();
-
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                   
-                    pl.setvalor(Convert.ToDouble(dt.Rows[i]["Valor"].ToString()));
+                    pl.Valor = Convert.ToDouble(dt.Rows[i]["Valor"].ToString());
                 }
 
-
+                // Encerra conexão com o banco de dados e retorna o valor do objeto Plano
                 con.desconectar();
-                return pl.getvalor();
+                return pl.Valor;
             }
-
             catch (Exception ex)
             {
+                // Em caso de erro, mostra a mensagem na tela e retorna 0
                 MessageBox.Show(ex.Message);
                 return 0;
             }
         }
 
-        public void deletarPL(int id, int verificacao)
+        public void deletarPL(int id)
         {
             try
             {
@@ -199,7 +219,7 @@ namespace Sistema_almoço_alunos.src.Services
 
                 //Descondectando do banco de dados
                 con.desconectar();
-               
+
             }
             catch (Exception ex)
             {
@@ -208,3 +228,4 @@ namespace Sistema_almoço_alunos.src.Services
         }
     }
 }
+
