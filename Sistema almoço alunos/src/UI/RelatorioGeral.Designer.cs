@@ -35,7 +35,7 @@
             this.txtAno = new System.Windows.Forms.MaskedTextBox();
             this.txtMes = new System.Windows.Forms.MaskedTextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.btnFechar = new System.Windows.Forms.Button();
+            this.btnPDF = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtRelatorio)).BeginInit();
             this.SuspendLayout();
             // 
@@ -106,22 +106,22 @@
             this.label3.TabIndex = 74;
             this.label3.Text = "Nome do aluno:";
             // 
-            // btnFechar
+            // btnPDF
             // 
-            this.btnFechar.Location = new System.Drawing.Point(162, 428);
-            this.btnFechar.Name = "btnFechar";
-            this.btnFechar.Size = new System.Drawing.Size(108, 34);
-            this.btnFechar.TabIndex = 75;
-            this.btnFechar.Text = "Fechar";
-            this.btnFechar.UseVisualStyleBackColor = true;
-            this.btnFechar.Click += new System.EventHandler(this.btnFechar_Click);
+            this.btnPDF.Location = new System.Drawing.Point(162, 428);
+            this.btnPDF.Name = "btnPDF";
+            this.btnPDF.Size = new System.Drawing.Size(108, 34);
+            this.btnPDF.TabIndex = 75;
+            this.btnPDF.Text = "Gerar PDF";
+            this.btnPDF.UseVisualStyleBackColor = true;
+            this.btnPDF.Click += new System.EventHandler(this.btnGerarPdf_Click);
             // 
             // RelatorioGeral
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(424, 465);
-            this.Controls.Add(this.btnFechar);
+            this.Controls.Add(this.btnPDF);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -146,6 +146,6 @@
         private System.Windows.Forms.MaskedTextBox txtAno;
         private System.Windows.Forms.MaskedTextBox txtMes;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btnFechar;
+        private System.Windows.Forms.Button btnPDF;
     }
 }

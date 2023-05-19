@@ -7,7 +7,7 @@
         public string Responsavel { get; set; }
         public string Telefone { get; set; }
         public string Turma { get; set; }
-        public bool ativo { get;set; }
+        public int Status { get;set; }
     }
 
 }

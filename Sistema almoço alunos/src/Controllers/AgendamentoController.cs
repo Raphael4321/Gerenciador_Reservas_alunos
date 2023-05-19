@@ -1,4 +1,5 @@
-﻿using Sistema_almoço_alunos.src.Entities;
+﻿using Org.BouncyCastle.Ocsp;
+using Sistema_almoço_alunos.src.Entities;
 using Sistema_almoço_alunos.src.Services;
 using Sistema_almoço_alunos.src.Utils;
 using System;
@@ -13,14 +14,10 @@ namespace Sistema_almoço_alunos.src.Controllers
         AgendamentoService AgeServico = new();
 
         // Lista os agendamentos de um determinado mês e ano, de acordo com o ID do paciente
-        public DataTable ListarAgendamentos(int id, string mes, string ano)
+        public DataTable ListarAgendamentos(int id, string mes, string ano, int status)
         {
-            // Verifica se os parâmetros são válidos
-            if (id <= 0 || string.IsNullOrEmpty(mes) || string.IsNullOrEmpty(ano))
-                throw new ArgumentException("Parâmetros inválidos");
-
             // Chama o método da classe AgendamentoService para obter a tabela com os agendamentos
-            return AgeServico.listAgendamentos(id, mes, ano);
+            return AgeServico.ListarAgendamentos(id, mes, ano, status);
         }
 
         // Salva um agendamento
@@ -35,30 +32,28 @@ namespace Sistema_almoço_alunos.src.Controllers
         }
 
         // Verifica se há agendamentos que utilizam um determinado plano
-        public bool VerificarAgendamentosPorPlano(int id)
+        public bool VerificarPlanoEmUso(int id)
         {
             // Verifica se o parâmetro é válido
             if (id <= 0)
                 throw new ArgumentException("Parâmetro inválido");
 
             // Chama o método da classe AgendamentoService para verificar a quantidade de agendamentos que utilizam um determinado plano
-            return AgeServico.ProcurarAgeUsaPl(id);
+            return AgeServico.VerificarPlanoEmUso(id);
         }
 
-        // Deleta um agendamento
-        public void DeletarAgendamento(Agendamento agendamento)
+        // Atualiza o status do agendamento para 0
+        public void CancelarAgendamento(Agendamento agendamento)
         {
             // Verifica se o agendamento é válido
             if (agendamento == null)
                 throw new ArgumentNullException(nameof(agendamento), "Agendamento inválido");
 
-            // Pergunta ao usuário se ele realmente deseja excluir o agendamento
-            DialogResult confirmacao = MessageBox.Show("Tem certeza que deseja continuar?", "Excluir Agendamento", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-
-            // Se o usuário confirmar a exclusão, chama o método da classe AgendamentoService para excluir o agendamento
-            if (confirmacao == DialogResult.Yes)
-                AgeServico.DelAgendamento(agendamento);
+            // Chama o método de atualização do agendamento no repositório
+            AgeServico.CancelarAgendamento(agendamento);
         }
+ 
+
 
         // Calcula a soma total do valor dos agendamentos
         public double SomaTotal(DataTable dt)

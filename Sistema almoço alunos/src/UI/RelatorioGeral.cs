@@ -1,6 +1,7 @@
 ﻿using Sistema_almoço_alunos.src.Controllers;
 using Sistema_almoço_alunos.src.Utils;
 using System;
+using System.Data;
 using System.Windows.Forms;
 
 namespace Sistema_almoço_alunos.src.UI
@@ -9,6 +10,7 @@ namespace Sistema_almoço_alunos.src.UI
     {
         Utilidades util = new();
 
+        DataTable relatorio = new();
         public RelatorioGeral()
         {
             InitializeComponent();
@@ -21,17 +23,18 @@ namespace Sistema_almoço_alunos.src.UI
              Fill(txtNome.Text, txtMes.Text, txtAno.Text);
         }
 
-        private void btnFechar_Click(object sender, EventArgs e)
+        private void btnGerarPdf_Click(object sender, EventArgs e)
         {
-            this.Close();
-            
+            util.GerarPDF(relatorio);           
         }
 
         public void Fill(string nome, string mes, string ano)
         {
             AgendamentoController control = new();
 
-            dtRelatorio.DataSource = util.Relatorio(nome, mes, ano);
+            relatorio = util.Relatorio(nome, mes, ano);
+
+            dtRelatorio.DataSource = relatorio;
 
             dtRelatorio.Columns["Nome do aluno"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dtRelatorio.Columns["Valor total"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

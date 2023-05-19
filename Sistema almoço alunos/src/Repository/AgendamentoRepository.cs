@@ -7,10 +7,11 @@ using System.Windows.Forms;
 
 namespace Sistema_almoço_alunos.src.Repository
 {
-    internal class AgendamentoRepository
+    public class AgendamentoRepository
     {
         Conexao con = new();
 
+        // Atualiza um agendamento no banco de dados
         public void AtualizarAgendamento(Agendamento age)
         {
             try
@@ -46,6 +47,7 @@ namespace Sistema_almoço_alunos.src.Repository
             }
         }
 
+        // Salva um novo agendamento no banco de dados
         public void SalvarAgendamento(Agendamento age)
         {
             try
@@ -82,8 +84,8 @@ namespace Sistema_almoço_alunos.src.Repository
             }
         }
 
-
-        public DataTable listAgendamentos(int id, string mes, string ano)
+        // Lista os agendamentos no banco de dados
+        public DataTable ListarAgendamentos(int idAluno, string mes, string ano, int status)
         {
             try
             {
@@ -96,19 +98,21 @@ namespace Sistema_almoço_alunos.src.Repository
                 // Monta a query SQL para selecionar os agendamentos do aluno com o id especificado no mês e ano também especificados, 
                 // juntamente com os dados do plano relacionado a cada agendamento
                 string sql = @"SELECT * 
-                       FROM Agendamento AS a 
-                       INNER JOIN Plano AS p ON a.IdAluno = @IdAluno AND 
-                                                a.Ano LIKE @Ano AND 
-                                                strftime('%m', a.Data) LIKE @Mes AND 
-                                                p.Id = a.IdPlano";
+               FROM Agendamento AS a 
+               INNER JOIN Plano AS p ON a.IdAluno = @IdAluno AND 
+                                        a.Ano LIKE @Ano AND 
+                                        strftime('%m', a.Data) LIKE @Mes AND 
+                                        p.Id = a.IdPlano AND 
+                                        a.Status = @Status";
 
                 // Cria um objeto SQLiteCommand com a query SQL e a conexão do banco de dados
                 SQLiteCommand cmd = new(sql, con.conect);
 
                 // Adiciona os parâmetros à query SQL
-                cmd.Parameters.AddWithValue("@IdAluno", id);
+                cmd.Parameters.AddWithValue("@IdAluno", idAluno);
                 cmd.Parameters.AddWithValue("@Ano", ano + "%");
                 cmd.Parameters.AddWithValue("@Mes", mes + "%");
+                cmd.Parameters.AddWithValue("@Status", status);
 
                 // Cria um objeto SQLiteDataAdapter com o comando SQL e a conexão
                 SQLiteDataAdapter data = new(cmd);
@@ -136,14 +140,15 @@ namespace Sistema_almoço_alunos.src.Repository
         }
 
 
-        public void DelAgendamento(Agendamento age)
+        // Altera o status de um agendamento para 0 no banco de dados
+        public void CancelarAgendamento(Agendamento age)
         {
             try
             {
                 con.conectar();
 
                 // Estabelecendo o comando
-                string sql = "DELETE FROM Agendamento WHERE Id=@i";
+                string sql = "UPDATE Agendamento SET Status = 0 WHERE Id=@i";
 
                 //Estabelecendo a conexão do comando com o banco de dados
                 SQLiteCommand parametros = new(con.conect);
@@ -158,50 +163,15 @@ namespace Sistema_almoço_alunos.src.Repository
 
                 //Descondectando do banco de dados
                 con.desconectar();
-
-
             }
-
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 
-        public void DelTodos(int id)
-        {
-            try
-            {
-                con.conectar();
 
-                // Estabelecendo o comando
-                string sql = "DELETE FROM Agendamento WHERE IdAluno=@i";
-
-                //Estabelecendo a conexão do comando com o banco de dados
-                SQLiteCommand parametros = new(con.conect);
-
-                // Estabelecendo o texto do comando e o que cada @ significa a seguir
-                parametros.CommandText = sql;
-
-                parametros.Parameters.AddWithValue("@i", id);
-
-                //Efetiva o comando o comando
-                parametros.ExecuteNonQuery();
-
-                //Descondectando do banco de dados
-                con.desconectar();
-
-
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-
-            }
-        }
-
+        // Verifica se existem agendamentos utilizando um determinado plano
         public bool ProcurarAgeUsaPl(int idPlano)
         {
             try

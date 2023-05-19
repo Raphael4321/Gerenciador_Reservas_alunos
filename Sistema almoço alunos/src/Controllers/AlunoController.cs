@@ -6,77 +6,58 @@ using System;
 
 namespace Sistema_almoço_alunos.src.Controllers
 {
-    internal class AlunoController
+    public class AlunoController
     {
-        AlunoService stu = new();
+        AlunoService service = new();
 
-        public DataTable ListarAlunos(string dado, string filtro)
+        // Lista os alunos com base no filtro passado como parâmetro.
+        public DataTable ListarAlunos(string dado, string filtro, int ativo)
         {
-            // Executar a função que lista alunos
-            return stu.ListarAlunos(dado, filtro);
+            // Chama o método responsável por listar os alunos.
+            return service.ListarAlunos(dado, filtro, ativo);
         }
 
-        public void SalvarAluno(Aluno aluno)
+        // Salva um objeto Aluno no banco de dados.
+        public bool SalvarAluno(Aluno aluno)
         {
-            // Verificar se o objeto aluno é nulo
-            if (aluno is null)
-            {
-                throw new ArgumentNullException(nameof(aluno), "O objeto aluno não pode ser nulo.");
-            }
+            // Chama o método responsável por salvar o aluno.
+            service.SalvarAluno(aluno);
 
-            if (stu.SalvarAluno(aluno))
-            {
-                MessageBox.Show("Aluno salvo com sucesso!");
-            }
+            // Exibe uma mensagem de sucesso.
+            MessageBox.Show("Aluno salvo com sucesso!");
+
+            return true;
         }
 
-        public void DeletarAluno(Aluno aluno)
-        {
-            // Verificar se o objeto aluno é nulo
-            if (aluno is null)
-            {
-                throw new ArgumentNullException(nameof(aluno), "O objeto aluno não pode ser nulo.");
-            }
-
-            // Avisando usuário da exclusão dos dados
-            DialogResult confirm = MessageBox.Show("Excluir o aluno também excluirá seus agendamentos. Deseja continuar?", "Excluir Aluno", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-
-            // Proceder se usuário permitir
-            if (confirm == DialogResult.Yes)
-            {
-                AgendamentoService age = new();
-                age.DelTodosAgendamentos(aluno.Id);
-                stu.DeletarAluno(aluno);
-            }
-        }
-
+        // Inativa um objeto Aluno no banco de dados.
         public void InativarAluno(Aluno aluno)
         {
-            // Verificar se o objeto aluno é nulo
+            // Verifica se o objeto aluno é nulo.
             if (aluno is null)
             {
                 throw new ArgumentNullException(nameof(aluno), "O objeto aluno não pode ser nulo.");
             }
 
-            // Verifica se o aluno já está inativo
-            if (!aluno.ativo)
+            // Verifica se o aluno já está inativo.
+            if (aluno.Status == 0)
             {
                 MessageBox.Show("O aluno já está inativo!");
                 return;
             }
 
-            // Pergunta ao usuário se realmente deseja inativar o aluno
+            // Pergunta ao usuário se deseja realmente inativar o aluno.
             DialogResult dialogResult = MessageBox.Show($"Tem certeza que deseja inativar o aluno {aluno.Nome}?", "Confirmação", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.No)
             {
                 return;
             }
 
-            // Chama o método para mudar o estado do aluno para inativo
-            stu.InativarAluno(aluno);
+            // Chama o método para inativar o aluno no banco de dados.
+            service.InativarAluno(aluno);
 
             MessageBox.Show("Aluno inativado com sucesso!");
         }
+
 
     }
 }

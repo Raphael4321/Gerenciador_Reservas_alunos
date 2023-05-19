@@ -52,7 +52,6 @@ namespace Sistema_almoço_alunos.src.Repository
             }
         }
 
-
         public bool AtualizarAluno(Aluno aluno)
         {
             try
@@ -98,38 +97,37 @@ namespace Sistema_almoço_alunos.src.Repository
             return false;
         }
 
-
-        // Função que retorna uma DataTable com os dados dos alunos filtrados por um determinado texto e filtro
-        public DataTable listAlunos(string text, string filtro)
+        public DataTable listAlunos(string nome, string filtro, int ativo)
         {
             try
             {
                 // Cria uma nova conexão com o banco de dados
-                Conexao con = new Conexao();
+                Conexao conexao = new Conexao();
 
                 // Abre a conexão
-                con.conectar();
+                conexao.conectar();
 
-                // Monta a consulta SQL para buscar os dados dos alunos utilizando o filtro
-                string sql = "SELECT * FROM Alunos WHERE " + filtro + " LIKE @text";
+                // Monta a consulta SQL para buscar os dados dos alunos utilizando o filtro e o filtro de ativo/inativo
+                string sql = "SELECT * FROM Alunos WHERE " + filtro + " LIKE @nome AND Status = @ativo";
 
                 // Cria um novo adaptador de dados SQLite e passa a consulta e conexão como parâmetros
-                SQLiteDataAdapter data = new SQLiteDataAdapter(sql, con.conect);
+                SQLiteDataAdapter adaptador = new SQLiteDataAdapter(sql, conexao.conect);
 
-                // Adiciona o parâmetro @text na consulta SQL
-                data.SelectCommand.Parameters.AddWithValue("@text", text + "%");
+                // Adiciona os parâmetros @nome e @ativo na consulta SQL
+                adaptador.SelectCommand.Parameters.AddWithValue("@nome", nome + "%");
+                adaptador.SelectCommand.Parameters.AddWithValue("@ativo", ativo);
 
                 // Cria uma nova DataTable para armazenar os dados retornados
-                DataTable dt = new DataTable();
+                DataTable dtAlunos = new DataTable();
 
                 // Preenche a DataTable com os dados retornados pela consulta
-                data.Fill(dt);
+                adaptador.Fill(dtAlunos);
 
                 // Fecha a conexão com o banco de dados
-                con.desconectar();
+                conexao.desconectar();
 
-                // Retorna a DataTable preenchida
-                return dt;
+                // Retorna a DataTable preenchida com os alunos encontrados
+                return dtAlunos;
             }
             catch (Exception ex)
             {
@@ -139,44 +137,14 @@ namespace Sistema_almoço_alunos.src.Repository
             }
         }
 
-        public void DelAluno(Aluno aluno)
+        public bool InativarAluno(Aluno aluno)
         {
             try
             {
                 con.conectar();
 
                 // Estabelecendo o comando
-                string sql = "DELETE FROM Alunos WHERE Id=@i";
-
-                //Estabelecendo a conexão do comando com o banco de dados
-                SQLiteCommand parametros = new(con.conect);
-
-                // Estabelecendo o texto do comando e o que cada @ significa a seguir
-                parametros.CommandText = sql;
-
-                parametros.Parameters.AddWithValue("@i", aluno.Id);
-
-                //Efetiva o comando o comando
-                parametros.ExecuteNonQuery();
-
-                //Descondectando do banco de dados
-                con.desconectar();
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        public void InativarAluno(Aluno aluno)
-        {
-            try
-            {
-                con.conectar();
-
-                // Estabelecendo o comando
-                string sql = "UPDATE Alunos SET Ativo = 0 WHERE Id = @i";
+                string sql = "UPDATE Alunos SET Status = 0 WHERE Id = @i";
 
                 // Estabelecendo a conexão do comando com o banco de dados
                 SQLiteCommand parametros = new(con.conect);
@@ -191,10 +159,13 @@ namespace Sistema_almoço_alunos.src.Repository
 
                 // Desconectando do banco de dados
                 con.desconectar();
+
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
         }
 

@@ -78,3 +78,6 @@ C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema a
 C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.exe
 C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema almoço alunos.pdb
 C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\obj\Debug\Sistema_almoço_alunos.src.UI.Gerenciamento.resources
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\itextsharp.dll
+C:\Users\Teste\Desktop\projetos\Sistema almoço alunos - windows forms\Sistema almoço alunos\bin\Debug\itextsharp.xml

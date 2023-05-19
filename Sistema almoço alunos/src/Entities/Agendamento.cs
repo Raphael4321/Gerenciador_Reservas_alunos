@@ -2,7 +2,7 @@
 
 namespace Sistema_almoço_alunos.src.Entities
 {
-    internal class Agendamento
+    public class Agendamento
     {
         public int Id { get; set; }
 
@@ -11,6 +11,8 @@ namespace Sistema_almoço_alunos.src.Entities
         public DateTime Data { get; set; }
 
         public Plano Plano { get; set; }
+
+        public int Status { get; set; }
     }
 
 }
