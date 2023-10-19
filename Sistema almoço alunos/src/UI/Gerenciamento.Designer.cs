@@ -31,9 +31,8 @@
             this.btnFechar = new System.Windows.Forms.Button();
             this.ControleDeAbas = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
             this.txtBuscaAgendamento = new System.Windows.Forms.TextBox();
-            this.rdbInativo = new System.Windows.Forms.RadioButton();
-            this.rdbAtivo = new System.Windows.Forms.RadioButton();
             this.dtHistorico = new System.Windows.Forms.DataGridView();
             this.btnAgendarAlmoço = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -74,7 +73,6 @@
             this.btnCancelarPlano = new System.Windows.Forms.Button();
             this.btnSalvarPlano = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.ControleDeAbas.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtHistorico)).BeginInit();
@@ -106,8 +104,6 @@
             // 
             this.tabPage1.Controls.Add(this.label8);
             this.tabPage1.Controls.Add(this.txtBuscaAgendamento);
-            this.tabPage1.Controls.Add(this.rdbInativo);
-            this.tabPage1.Controls.Add(this.rdbAtivo);
             this.tabPage1.Controls.Add(this.dtHistorico);
             this.tabPage1.Controls.Add(this.btnAgendarAlmoço);
             this.tabPage1.Controls.Add(this.label2);
@@ -138,6 +134,15 @@
             this.tabPage1.Text = "Gerenciar Agendamentos";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(267, 308);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 13);
+            this.label8.TabIndex = 118;
+            this.label8.Text = "Valor Total";
+            // 
             // txtBuscaAgendamento
             // 
             this.txtBuscaAgendamento.Location = new System.Drawing.Point(205, 48);
@@ -146,28 +151,6 @@
             this.txtBuscaAgendamento.Size = new System.Drawing.Size(164, 20);
             this.txtBuscaAgendamento.TabIndex = 117;
             this.txtBuscaAgendamento.TextChanged += new System.EventHandler(this.txtBuscaAgendamento_TextChanged);
-            // 
-            // rdbInativo
-            // 
-            this.rdbInativo.AutoSize = true;
-            this.rdbInativo.Location = new System.Drawing.Point(325, 25);
-            this.rdbInativo.Name = "rdbInativo";
-            this.rdbInativo.Size = new System.Drawing.Size(81, 17);
-            this.rdbInativo.TabIndex = 116;
-            this.rdbInativo.Text = "Cancelados";
-            this.rdbInativo.UseVisualStyleBackColor = true;
-            // 
-            // rdbAtivo
-            // 
-            this.rdbAtivo.AutoSize = true;
-            this.rdbAtivo.Checked = true;
-            this.rdbAtivo.Location = new System.Drawing.Point(325, 6);
-            this.rdbAtivo.Name = "rdbAtivo";
-            this.rdbAtivo.Size = new System.Drawing.Size(54, 17);
-            this.rdbAtivo.TabIndex = 115;
-            this.rdbAtivo.TabStop = true;
-            this.rdbAtivo.Text = "Ativos";
-            this.rdbAtivo.UseVisualStyleBackColor = true;
             // 
             // dtHistorico
             // 
@@ -291,7 +274,7 @@
             // btnCancelar
             // 
             this.btnCancelar.Enabled = false;
-            this.btnCancelar.Location = new System.Drawing.Point(98, 246);
+            this.btnCancelar.Location = new System.Drawing.Point(98, 247);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(79, 24);
             this.btnCancelar.TabIndex = 99;
@@ -310,11 +293,11 @@
             // 
             // btnDeletar
             // 
-            this.btnDeletar.Location = new System.Drawing.Point(13, 313);
+            this.btnDeletar.Location = new System.Drawing.Point(98, 247);
             this.btnDeletar.Name = "btnDeletar";
-            this.btnDeletar.Size = new System.Drawing.Size(140, 45);
+            this.btnDeletar.Size = new System.Drawing.Size(79, 24);
             this.btnDeletar.TabIndex = 100;
-            this.btnDeletar.Text = "Deletar Almoço";
+            this.btnDeletar.Text = "Deletar";
             this.btnDeletar.UseVisualStyleBackColor = true;
             this.btnDeletar.Click += new System.EventHandler(this.btnDeletar_Click);
             // 
@@ -378,7 +361,7 @@
             // 
             // txtValorTotal
             // 
-            this.txtValorTotal.Location = new System.Drawing.Point(205, 326);
+            this.txtValorTotal.Location = new System.Drawing.Point(215, 324);
             this.txtValorTotal.Name = "txtValorTotal";
             this.txtValorTotal.ReadOnly = true;
             this.txtValorTotal.Size = new System.Drawing.Size(164, 20);
@@ -406,7 +389,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(432, 334);
+            this.tabPage2.Size = new System.Drawing.Size(432, 364);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Gerenciar Planos";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -579,15 +562,6 @@
             this.label5.TabIndex = 96;
             this.label5.Text = "Nome:";
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(257, 310);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(58, 13);
-            this.label8.TabIndex = 118;
-            this.label8.Text = "Valor Total";
-            // 
             // Gerenciamento
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -624,7 +598,6 @@
         private System.Windows.Forms.MaskedTextBox txtMes;
         private System.Windows.Forms.Button btnSalvar;
         private System.Windows.Forms.TextBox txtPlano;
-        private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.TextBox txtValor;
         private System.Windows.Forms.Button btnDeletar;
         private System.Windows.Forms.MaskedTextBox txtFim;
@@ -652,9 +625,8 @@
         private System.Windows.Forms.Button btnCancelarPlano;
         private System.Windows.Forms.Button btnSalvarPlano;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.RadioButton rdbInativo;
-        private System.Windows.Forms.RadioButton rdbAtivo;
         private System.Windows.Forms.TextBox txtBuscaAgendamento;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnCancelar;
     }
 }

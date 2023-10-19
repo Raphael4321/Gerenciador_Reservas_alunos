@@ -57,9 +57,11 @@ namespace Sistema_almoço_alunos
             this.lblTelefone = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btnDetail = new System.Windows.Forms.Button();
-            this.btnDeletar = new System.Windows.Forms.Button();
+            this.btnDesativar = new System.Windows.Forms.Button();
             this.rdbAtivo = new System.Windows.Forms.RadioButton();
             this.rdbInativo = new System.Windows.Forms.RadioButton();
+            this.btnAtivar = new System.Windows.Forms.Button();
+            this.btnDeletar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtAlunos)).BeginInit();
             this.SuspendLayout();
             // 
@@ -239,7 +241,7 @@ namespace Sistema_almoço_alunos
             // btnSalvarEdit
             // 
             this.btnSalvarEdit.Enabled = false;
-            this.btnSalvarEdit.Location = new System.Drawing.Point(19, 293);
+            this.btnSalvarEdit.Location = new System.Drawing.Point(20, 293);
             this.btnSalvarEdit.Name = "btnSalvarEdit";
             this.btnSalvarEdit.Size = new System.Drawing.Size(78, 24);
             this.btnSalvarEdit.TabIndex = 65;
@@ -280,7 +282,7 @@ namespace Sistema_almoço_alunos
             // btnCancelEdit
             // 
             this.btnCancelEdit.Enabled = false;
-            this.btnCancelEdit.Location = new System.Drawing.Point(102, 293);
+            this.btnCancelEdit.Location = new System.Drawing.Point(101, 293);
             this.btnCancelEdit.Name = "btnCancelEdit";
             this.btnCancelEdit.Size = new System.Drawing.Size(79, 24);
             this.btnCancelEdit.TabIndex = 66;
@@ -317,15 +319,15 @@ namespace Sistema_almoço_alunos
             this.btnDetail.UseVisualStyleBackColor = true;
             this.btnDetail.Click += new System.EventHandler(this.btnDetail_Click);
             // 
-            // btnDeletar
+            // btnDesativar
             // 
-            this.btnDeletar.Location = new System.Drawing.Point(103, 293);
-            this.btnDeletar.Name = "btnDeletar";
-            this.btnDeletar.Size = new System.Drawing.Size(78, 23);
-            this.btnDeletar.TabIndex = 67;
-            this.btnDeletar.Text = "Desativar";
-            this.btnDeletar.UseVisualStyleBackColor = true;
-            this.btnDeletar.Click += new System.EventHandler(this.btnDel_Click);
+            this.btnDesativar.Location = new System.Drawing.Point(103, 293);
+            this.btnDesativar.Name = "btnDesativar";
+            this.btnDesativar.Size = new System.Drawing.Size(78, 23);
+            this.btnDesativar.TabIndex = 67;
+            this.btnDesativar.Text = "Desativar";
+            this.btnDesativar.UseVisualStyleBackColor = true;
+            this.btnDesativar.Click += new System.EventHandler(this.btnDesativar_Click);
             // 
             // rdbAtivo
             // 
@@ -351,11 +353,37 @@ namespace Sistema_almoço_alunos
             this.rdbInativo.UseVisualStyleBackColor = true;
             this.rdbInativo.CheckedChanged += new System.EventHandler(this.rdbInativo_CheckedChanged);
             // 
+            // btnAtivar
+            // 
+            this.btnAtivar.Enabled = false;
+            this.btnAtivar.Location = new System.Drawing.Point(20, 293);
+            this.btnAtivar.Name = "btnAtivar";
+            this.btnAtivar.Size = new System.Drawing.Size(78, 23);
+            this.btnAtivar.TabIndex = 85;
+            this.btnAtivar.Text = "Ativar";
+            this.btnAtivar.UseVisualStyleBackColor = true;
+            this.btnAtivar.Visible = false;
+            this.btnAtivar.Click += new System.EventHandler(this.btnAtivar_Click);
+            // 
+            // btnDeletar
+            // 
+            this.btnDeletar.Enabled = false;
+            this.btnDeletar.Location = new System.Drawing.Point(102, 294);
+            this.btnDeletar.Name = "btnDeletar";
+            this.btnDeletar.Size = new System.Drawing.Size(78, 23);
+            this.btnDeletar.TabIndex = 86;
+            this.btnDeletar.Text = "Deletar";
+            this.btnDeletar.UseVisualStyleBackColor = true;
+            this.btnDeletar.Visible = false;
+            this.btnDeletar.Click += new System.EventHandler(this.btnDeletar_Click);
+            // 
             // CadAluno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(657, 431);
+            this.Controls.Add(this.btnDeletar);
+            this.Controls.Add(this.btnAtivar);
             this.Controls.Add(this.rdbInativo);
             this.Controls.Add(this.rdbAtivo);
             this.Controls.Add(this.label2);
@@ -385,7 +413,7 @@ namespace Sistema_almoço_alunos
             this.Controls.Add(this.lblTelefone);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnDetail);
-            this.Controls.Add(this.btnDeletar);
+            this.Controls.Add(this.btnDesativar);
             this.Name = "CadAluno";
             this.Text = "Gerenciador de alunos";
             ((System.ComponentModel.ISupportInitialize)(this.dtAlunos)).EndInit();
@@ -423,9 +451,11 @@ namespace Sistema_almoço_alunos
         private System.Windows.Forms.Label lblTelefone;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnDetail;
-        private System.Windows.Forms.Button btnDeletar;
+        private System.Windows.Forms.Button btnDesativar;
         private System.Windows.Forms.RadioButton rdbAtivo;
         private System.Windows.Forms.RadioButton rdbInativo;
+        private System.Windows.Forms.Button btnAtivar;
+        private System.Windows.Forms.Button btnDeletar;
     }
 }
 

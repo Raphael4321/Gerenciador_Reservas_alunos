@@ -2,7 +2,6 @@
 using Sistema_almoço_alunos.src.Entities;
 using System;
 using System.Data;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Sistema_almoço_alunos.src.UI
@@ -13,7 +12,6 @@ namespace Sistema_almoço_alunos.src.UI
         Agendamento agendamento = new();
         Plano plano = new();
         Aluno aluno = new();
-        DataTable dt = new();
 
         AgendamentoController controllerAge = new();
         PlanoController controllerPlano = new();
@@ -32,6 +30,7 @@ namespace Sistema_almoço_alunos.src.UI
 
                 // Preenchendo a lista de agendamentos feitos pelo aluno
                 Fill(aluno.Id, txtMes.Text, txtAno.Text,1);
+                FillPlanos(txtBuscaPlano.Text);
             }
 
             catch (Exception ex)
@@ -41,11 +40,13 @@ namespace Sistema_almoço_alunos.src.UI
 
         }
 
+        //----------------------------Interações do usuario-------------------
+
         // Ao clicar no botão "Agendamento"
         private void btnAgen_Click(object sender, EventArgs e)
         {
             // Preparando formulario para novo cadastro
-            setup(1, false, true);
+            Setup(1, false);
         }
 
         // Ao clicar no botão "Fechar"
@@ -66,7 +67,7 @@ namespace Sistema_almoço_alunos.src.UI
             else
             {
                 // Retornando forumalrio para estado original
-                setup(0, true, false);
+                Setup(0, true);
 
                 // Alimentando o objeto agendamento com os dados nos campos 
                 agendamento.Plano = new Plano();
@@ -78,7 +79,7 @@ namespace Sistema_almoço_alunos.src.UI
                 controllerAge.SalvarAgendamento(agendamento);
 
                 // Preenchendo lista de agendamentos cadsatrados
-                Fill(agendamento.Id, txtMes.Text, txtAno.Text, 1);
+                Fill(aluno.Id, txtMes.Text, txtAno.Text, 1);
             }
         }
 
@@ -102,27 +103,46 @@ namespace Sistema_almoço_alunos.src.UI
         // Ao clicar no botão "Cancelar"
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            setup(0, true, false);
+            Setup(0, true);
         }
 
         // Ao clicar no botão "Deletar"
         private void btnDeletar_Click(object sender, EventArgs e)
         {
-            controllerAge.CancelarAgendamento (agendamento);
-            Fill(aluno.Id, txtMes.Text, txtAno.Text, 1);
+            // Verifica se um agendamento está selecionado
+            if (agendamento != null)
+            {
+                // Exibe uma caixa de diálogo de confirmação para o usuário
+                DialogResult result = MessageBox.Show("Tem certeza que deseja excluir este agendamento?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                // Verifica se o usuário confirmou a exclusão
+                if (result == DialogResult.Yes)
+                {
+                    // Chama o método que deleta o agendamento do banco de dados
+                    controllerAge.DeletarAgendamento(agendamento);
+
+                    // Atualiza a exibição dos agendamentos
+                    Fill(aluno.Id, txtMes.Text, txtAno.Text, 1);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nenhum agendamento selecionado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
 
         // Ao clicar no botão "Editar
         private void btnEditar_Click(object sender, EventArgs e)
         {
-            setup(0, false, true);
+            Setup(0, false);
         }
 
         // Ao selecionar uma linha da tabela
         private void dtHistorico_SelectionChanged(object sender, EventArgs e)
         {
             // Preparando campos para seleção
-            setup(0, true, false);
+            Setup(0, true);
 
             // Se a linha atual não estiver vazia (caso o usuario clique no cabeçalho da tabela)
             if (dtHistorico.CurrentRow != null)
@@ -145,49 +165,31 @@ namespace Sistema_almoço_alunos.src.UI
             Fill(aluno.Id, txtMes.Text, txtAno.Text, 1);
         }
 
-        // Exibe apenas registros marcados como "Ativo".
-        private void rdbAtivo_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rdbAtivo.Checked)
-            {
-                rdbInativo.Checked = false;
-                Fill(aluno.Id, txtMes.Text, txtAno.Text, 1);
-            }
-        }
-
-        // Exibe apenas registros marcados como "Inativo".
-        private void rdbInativo_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rdbInativo.Checked)
-            {
-                rdbAtivo.Checked = false;
-                Fill(aluno.Id, txtMes.Text, txtAno.Text, 0);
-            }
-        }
 
         //-------------------------Configurações de campos e afins (Planos)-------------------
 
-        // Metodo que preenche a tabela
+        // Método que preenche a tabela
         // Preenche a tabela com os dados armazenados no banco de dados
         public void Fill(int id, string mes, string ano, int status)
         {
             DataTable consulta = ListarAgendamentos(id, mes, ano, status);
-            AtualizarTabela(consulta);
+            dtHistorico.DataSource = consulta;
             EsconderColunasDesnecessarias();
             DeterminarTamanhoColunas();
             SomarValorTotal(consulta);
+
+            DataTable consulta2 = controllerPlano.ListaPlanos("");
+
+            cmbPlano.DataSource = consulta2;
+            cmbPlano.DisplayMember = "Nome";
+            cmbPlano.ValueMember = "Id";
         }
+
 
         // Obtém a lista de agendamentos do controlador
         private DataTable ListarAgendamentos(int id, string mes, string ano, int status)
         {
             return controllerAge.ListarAgendamentos(id, mes, ano, status);
-        }
-
-        // Atualiza a fonte de dados da tabela com uma nova DataTable
-        private void AtualizarTabela(DataTable dataTable)
-        {
-            dtHistorico.DataSource = dataTable;
         }
 
         // Esconde colunas desnecessárias na tabela
@@ -344,20 +346,20 @@ namespace Sistema_almoço_alunos.src.UI
         private void btnCancelarPlano_Click(object sender, EventArgs e)
         {
             // Configura o estado do formulário para edição de plano
-            setupPl(0, true, false);
+            setupPl(0, true);
         }
 
         // Define o comportamento do botão de edição de plano
         private void btnEditarPlano_Click(object sender, EventArgs e)
         {
             // Configura o estado do formulário para edição de plano
-            setupPl(0, false, true);
+            setupPl(0, false);
         }
 
         private void dtPlanos_SelectionChanged(object sender, EventArgs e)
         {
             // Chamando o método "setupPl" para preparar os campos
-            setupPl(0, true, false);
+            setupPl(0, true);
 
             try
             {
@@ -374,7 +376,7 @@ namespace Sistema_almoço_alunos.src.UI
                     // e preparando os campos se necessário
                     if (plano.Id > 0)
                     {
-                        setupPl(0, true, false);
+                        setupPl(0, true);
                     }
                 }
             }
@@ -387,7 +389,7 @@ namespace Sistema_almoço_alunos.src.UI
         private void btnNovoPlano_Click(object sender, EventArgs e)
         {
             // Preparando os campos para um novo cadastro
-            setupPl(1, false, true);
+            setupPl(1, false);
         }
 
         private void btnDeletarPlano_Click(object sender, EventArgs e)
@@ -406,11 +408,11 @@ namespace Sistema_almoço_alunos.src.UI
 
         //=========================Preparação de campos nas abas=====================
 
-        // Metodo para preparar os campos para um cadastro ou edição
-        private void setup(int sinal, bool state1, bool state2)
+        // Método para preparar os campos para um cadastro ou edição
+        private void Setup(int signal, bool state)
         {
-            // Se o sinal for igual a 1, então um novo agendamento esta sendo cadastrado
-            if (sinal == 1)
+            // Se o sinal for igual a 1, então um novo agendamento está sendo cadastrado
+            if (signal == 1)
             {
                 agendamento.Id = 0;
                 txtData.Text = null;
@@ -418,37 +420,38 @@ namespace Sistema_almoço_alunos.src.UI
                 txtFim.Text = null;
                 txtValor.Text = null;
                 cmbPlano.Text = null;
-
             }
 
             // Define o estado dos campos
-            txtData.ReadOnly = state1;
-            txtInicio.ReadOnly = state1;
-            txtFim.ReadOnly = state1;
-            txtValor.ReadOnly = state1;
+            txtData.ReadOnly = state;
+            txtInicio.ReadOnly = state;
+            txtFim.ReadOnly = state;
+            txtValor.ReadOnly = state;
 
-            //Bloqueia e esconde o textbox de plano
-            txtPlano.ReadOnly = state1;
-            txtPlano.Visible = state1;
+            // Bloqueia e esconde o textbox de plano
+            txtPlano.ReadOnly = state;
+            txtPlano.Visible = state;
 
-            // Define a visibilidade dos botões Editar
-            btnEditar.Visible = state1;
-            btnEditar.Enabled = state1;
+            // Define a visibilidade dos botões Editar e Deletar
+            btnEditar.Visible = state;
+            btnEditar.Enabled = state;
+            btnDeletar.Visible = state;
+            btnDeletar.Enabled = state;
 
-            // Define se os botões Salvar, Cancelar, Recarregar e seleção de plano estarão ativos
-            btnSalvar.Enabled = state2;
-            btnCancelar.Enabled = state2;
-            cmbPlano.Enabled = state2;
+            // Define se os botões Salvar, Cancelar e a seleção de plano estarão ativos
+            btnSalvar.Enabled = !state;
+            btnCancelar.Enabled = !state;
+            cmbPlano.Enabled = !state;
 
-            // Define a visibilidade dos botões Salvar, Cancelar, Recarregar e seleção de plano
-            btnSalvar.Visible = state2;
-            btnCancelar.Visible = state2;
-            cmbPlano.Visible = state2;
-
+            // Define a visibilidade dos botões Salvar, Cancelar e a seleção de plano
+            btnSalvar.Visible = !state;
+            cmbPlano.Visible = !state;
+            btnCancelar.Visible = !state;
         }
 
+
         // Configura o estado do formulário para edição de plano
-        private void setupPl(int sinal, bool state1, bool state2)
+        private void setupPl(int sinal, bool state)
         {
             // Se o sinal for igual a 1, um novo plano está sendo cadastrado
             if (sinal == 1)
@@ -462,26 +465,26 @@ namespace Sistema_almoço_alunos.src.UI
             }
 
             // Configura o estado de leitura dos campos de entrada de dados
-            txtNomePlano.ReadOnly = state1;
-            txtValorPlano.ReadOnly = state1;
-            mskInicio.ReadOnly = state1;
-            mskFim.ReadOnly = state1;
+            txtNomePlano.ReadOnly = state;
+            txtValorPlano.ReadOnly = state;
+            mskInicio.ReadOnly = state;
+            mskFim.ReadOnly = state;
 
             // Configura a visibilidade dos botões Editar e Detalhe
-            btnEditarPlano.Visible = state1;
-            btnDeletarPlano.Visible = state1;
+            btnEditarPlano.Visible = state;
+            btnDeletarPlano.Visible = state;
 
             // Configura o estado dos botões Editar e Detalhe
-            btnEditarPlano.Enabled = state1;
-            btnDeletarPlano.Enabled = state1;
+            btnEditarPlano.Enabled = state;
+            btnDeletarPlano.Enabled = state;
 
             // Configura o estado dos botões Salvar e Cancelar
-            btnSalvarPlano.Enabled = state2;
-            btnCancelarPlano.Enabled = state2;
+            btnSalvarPlano.Enabled = !state;
+            btnCancelarPlano.Enabled = !state;
 
             // Configura a visibilidade dos botões Salvar e Cancelar
-            btnSalvarPlano.Visible = state2;
-            btnCancelarPlano.Visible = state2;
+            btnSalvarPlano.Visible = !state;
+            btnCancelarPlano.Visible = !state;
         }
 
 

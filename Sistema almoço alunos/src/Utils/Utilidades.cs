@@ -122,7 +122,7 @@ namespace Sistema_almoço_alunos.src.Utils
                 string nomeAluno = Convert.ToString(drAluno["Nome"]);
 
                 // Obtém os agendamentos do aluno do ControllerAge
-                DataTable dtAgendamento = GetAgendamentosAluno(idAluno, mes, ano);
+                DataTable dtAgendamento = GetAgendamentosAluno(idAluno, mes, ano, 1);
 
                 // Calcula o valor total dos agendamentos do aluno
                 double valorTotal = CalcularValorTotal(dtAgendamento);
@@ -148,10 +148,10 @@ namespace Sistema_almoço_alunos.src.Utils
         }
 
         // Obtém e retorna os agendamentos do aluno com o ID especificado para o mês e ano especificados
-        private DataTable GetAgendamentosAluno(int idAluno, string mes, string ano)
+        private DataTable GetAgendamentosAluno(int idAluno, string mes, string ano, int status)
         {
             AgendamentoController controllerAge = new AgendamentoController();
-            return controllerAge.ListarAgendamentos(idAluno, mes, ano);
+            return controllerAge.ListarAgendamentos(idAluno, mes, ano, status);
         }
 
         // Calcula e retorna o valor total dos agendamentos na tabela
