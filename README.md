@@ -1,4 +1,3 @@
 # Gerenciador-de-Reservas
 
-Um gerenciador para uma escola que precisa reservar mesas para alunos que ficam na escola para comer depois da aula.
-Desenvolvido com Windows forms, C# e um banco de dados SQLite
+Uma solução de gerenciamento de reservas destinada a alunos que permanecem na escola para o almoço. Implementada em Windows Forms, utiliza C# para a lógica do sistema e SQLite para a gestão de dados.
